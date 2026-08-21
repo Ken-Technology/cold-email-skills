@@ -10,6 +10,7 @@ import {
   mkdirSync,
   mkdtempSync,
   readFileSync,
+  rmSync,
   symlinkSync,
   writeFileSync,
 } from 'node:fs';
@@ -22,12 +23,17 @@ function fixture() {
   const target = path.join(root, 'target');
   mkdirSync(path.join(source, 'search-strategy'), { recursive: true });
   mkdirSync(path.join(target, '.github', 'workflows'), { recursive: true });
+  mkdirSync(path.join(target, 'scripts'), { recursive: true });
   mkdirSync(path.join(target, 'old-skill'), { recursive: true });
   writeFileSync(path.join(source, 'search-strategy', 'SKILL.md'), 'new skill\n');
   writeFileSync(path.join(source, 'README.md'), 'new readme\n');
   writeFileSync(path.join(source, 'LICENSE'), 'MIT\n');
   writeFileSync(path.join(target, 'old-skill', 'SKILL.md'), 'old\n');
+  writeFileSync(path.join(target, 'README.md'), 'published readme\n');
+  writeFileSync(path.join(target, 'LICENSE'), 'published license\n');
   writeFileSync(path.join(target, '.github', 'workflows', 'publish-cold-email-skills.yml'), 'publisher\n');
+  writeFileSync(path.join(target, 'scripts', 'sync-published-tree.mjs'), 'publisher script\n');
+  writeFileSync(path.join(target, 'scripts', 'sync-published-tree.test.mjs'), 'publisher tests\n');
   return { root, source, target };
 }
 
@@ -77,6 +83,45 @@ test('synchronize rejects unexpected source paths', () => {
     () => synchronizePublishedTree({ sourceDir: source, targetDir: target }),
     /unexpected source path/,
   );
+});
+
+test('synchronize rejects reserved source skill roots before replacing the publisher', () => {
+  const { source, target } = fixture();
+  mkdirSync(path.join(source, 'scripts'), { recursive: true });
+  writeFileSync(path.join(source, 'scripts', 'SKILL.md'), 'malicious publisher replacement\n');
+
+  assert.throws(
+    () => synchronizePublishedTree({ sourceDir: source, targetDir: target }),
+    /reserved source path: scripts/,
+  );
+  assert.equal(readFileSync(path.join(target, 'scripts', 'sync-published-tree.mjs'), 'utf8'), 'publisher script\n');
+  assert.equal(existsSync(path.join(target, 'old-skill')), true);
+});
+
+test('synchronize rejects a non-file preserved README before deleting generated content', () => {
+  const { source, target } = fixture();
+  rmSync(path.join(target, 'README.md'));
+  mkdirSync(path.join(target, 'README.md'));
+
+  assert.throws(
+    () => synchronizePublishedTree({ sourceDir: source, targetDir: target }),
+    /preserved target file is not a regular file: README\.md/,
+  );
+  assert.equal(existsSync(path.join(target, 'old-skill')), true);
+  assert.equal(lstatSync(path.join(target, 'README.md')).isDirectory(), true);
+});
+
+test('synchronize rejects a symlink preserved LICENSE before deleting generated content', () => {
+  const { source, target } = fixture();
+  rmSync(path.join(target, 'LICENSE'));
+  symlinkSync(path.join(target, 'README.md'), path.join(target, 'LICENSE'));
+
+  assert.throws(
+    () => synchronizePublishedTree({ sourceDir: source, targetDir: target }),
+    /symlink is not allowed: LICENSE/,
+  );
+  assert.equal(existsSync(path.join(target, 'old-skill')), true);
+  assert.equal(lstatSync(path.join(target, 'LICENSE')).isSymbolicLink(), true);
 });
 
 test('workflow is scheduled, manually dispatchable, and uses only target contents write', () => {

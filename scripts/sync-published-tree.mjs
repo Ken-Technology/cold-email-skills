@@ -14,6 +14,8 @@ const PRESERVED_SCRIPTS = new Set([
   'sync-published-tree.mjs',
   'sync-published-tree.test.mjs',
 ]);
+const RESERVED_SOURCE_ROOTS = new Set(['scripts', '.github', '.git']);
+const PRESERVED_TARGET_FILES = ['README.md', 'LICENSE'];
 const GENERATED_FILES = new Set(['README.md', 'LICENSE']);
 
 function fail(message) {
@@ -39,6 +41,7 @@ function assertSafeTree(root) {
 function sourceEntries(sourceDir) {
   const names = readdirSync(sourceDir);
   for (const name of names) {
+    if (RESERVED_SOURCE_ROOTS.has(name)) fail(`reserved source path: ${name}`);
     if (name.startsWith('.')) fail(`unexpected source path: ${name}`);
     const entry = path.join(sourceDir, name);
     const info = lstatSync(entry);
@@ -57,6 +60,14 @@ function sourceEntries(sourceDir) {
 }
 
 function assertTargetLayout(targetDir, generatedNames) {
+  for (const name of PRESERVED_TARGET_FILES) {
+    const entry = path.join(targetDir, name);
+    if (!existsSync(entry)) fail(`preserved target file is not a regular file: ${name}`);
+    const info = lstatSync(entry);
+    if (info.isSymbolicLink() || !info.isFile()) {
+      fail(`preserved target file is not a regular file: ${name}`);
+    }
+  }
   const workflow = path.join(targetDir, PRESERVED_WORKFLOW);
   if (!existsSync(workflow) || !lstatSync(workflow).isFile()) {
     fail(`publisher workflow is missing: ${PRESERVED_WORKFLOW}`);
