@@ -85,6 +85,21 @@ test('synchronize rejects unexpected source paths', () => {
   );
 });
 
+test('synchronize rejects non-file generated README and LICENSE before deleting anything', () => {
+  for (const name of ['README.md', 'LICENSE']) {
+    const { source, target } = fixture();
+    rmSync(path.join(source, name));
+    mkdirSync(path.join(source, name));
+    writeFileSync(path.join(source, name, 'SKILL.md'), 'unexpected generated directory\n');
+
+    assert.throws(
+      () => synchronizePublishedTree({ sourceDir: source, targetDir: target }),
+      new RegExp(`generated source file is not a regular file: ${name}`),
+    );
+    assert.equal(existsSync(path.join(target, 'old-skill')), true);
+  }
+});
+
 test('synchronize rejects reserved source skill roots before replacing the publisher', () => {
   const { source, target } = fixture();
   mkdirSync(path.join(source, 'scripts'), { recursive: true });
@@ -126,6 +141,7 @@ test('synchronize rejects a symlink preserved LICENSE before deleting generated 
 
 test('workflow is scheduled, manually dispatchable, and uses only target contents write', () => {
   const workflow = readFileSync('.github/workflows/publish-cold-email-skills.yml', 'utf8');
+  const targetCheckout = workflow.split('      - name: Checkout source repository')[0];
   assert.match(workflow, /schedule:/);
   assert.match(workflow, /workflow_dispatch:/);
   assert.match(workflow, /contents:\s*write/);
@@ -135,5 +151,8 @@ test('workflow is scheduled, manually dispatchable, and uses only target content
   assert.match(workflow, /node --test scripts\/build-free\.test\.mjs/);
   assert.match(workflow, /node scripts\/build-free\.mjs --out/);
   assert.match(workflow, /sync-published-tree\.mjs/);
+  assert.match(targetCheckout, /persist-credentials:\s*false/);
+  assert.match(workflow, /GH_TOKEN:\s*\$\{\{ github\.token \}\}/);
+  assert.match(workflow, /git -c .*http\.extraheader=.*push origin HEAD:main/);
   assert.doesNotMatch(workflow, /COLD_EMAIL_SKILLS_DEPLOY_KEY|secrets\.|--force|force-push/);
 });

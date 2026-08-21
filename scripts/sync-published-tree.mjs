@@ -45,11 +45,15 @@ function sourceEntries(sourceDir) {
     if (name.startsWith('.')) fail(`unexpected source path: ${name}`);
     const entry = path.join(sourceDir, name);
     const info = lstatSync(entry);
+    if (GENERATED_FILES.has(name)) {
+      if (!info.isFile()) fail(`generated source file is not a regular file: ${name}`);
+      continue;
+    }
     if (info.isDirectory()) {
       if (!existsSync(path.join(entry, 'SKILL.md'))) {
         fail(`unexpected source path: ${name}`);
       }
-    } else if (!info.isFile() || !GENERATED_FILES.has(name)) {
+    } else {
       fail(`unexpected source path: ${name}`);
     }
   }
