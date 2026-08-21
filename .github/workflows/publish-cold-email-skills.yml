@@ -1,0 +1,67 @@
+name: Publish cold-email-skills
+
+on:
+  schedule:
+    - cron: '17 5 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-cold-email-skills
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          path: target
+
+      - name: Checkout source repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: Ken-Technology/ken-ai-plugin
+          ref: main
+          path: source
+          token: ${{ github.token }}
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde0c81c44821de2a
+        with:
+          node-version: '20'
+
+      - name: Test source build
+        working-directory: source
+        run: node --test scripts/build-free.test.mjs
+
+      - name: Build free distribution
+        working-directory: source
+        run: node scripts/build-free.mjs --out build/cold-email-skills
+
+      - name: Synchronize generated tree
+        run: node target/scripts/sync-published-tree.mjs --source-dir source/build/cold-email-skills --target-dir target
+
+      - name: Record source revision
+        id: source-revision
+        run: echo "sha=$(git -C source rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Commit changed generated content
+        working-directory: target
+        env:
+          SOURCE_SHA: ${{ steps.source-revision.outputs.sha }}
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Published tree already current.'
+            exit 0
+          fi
+          git config user.name 'ken-ai-bot'
+          git config user.email 'development@ken.so'
+          git commit -m "build: sync from ken-ai-plugin@${SOURCE_SHA}"
+          git push origin HEAD:main
