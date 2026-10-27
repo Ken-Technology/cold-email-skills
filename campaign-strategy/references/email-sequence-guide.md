@@ -4,12 +4,12 @@ Create strategic blueprints that tell the Email Copywriter exactly what to write
 
 ## Output Format
 
-Use this Markdown structure for each email:
+The blueprints sit under `### Email Sequence` in the segment's `## Strategy - <segment name>` section, so each email is a `####` heading. Use this Markdown structure for each email:
 
 ```markdown
-### Email 1
+#### Email 1
 **Goal:** [What this email is trying to accomplish]
-**Delay:** [Days since previous email - 0 for first]
+**Delay:** [Days to wait BEFORE this email sends (delta from the previous email) - 0 for the first]
 
 **Opening Hook:**
 [What should the first 1-2 lines accomplish? Reference specific pain point? Lead with insight? Ask a question?]
@@ -38,7 +38,7 @@ For each section, be specific and actionable:
 
 **Main Content** - Don't say "share value." Say "Focus on the case study of [customer type] achieving [result]. Emphasize the before/after transformation."
 
-**Proof/Credibility** - Don't say "add social proof." Say "Include the 3x metric from the case study. Mention 2 recognizable customer names in their industry."
+**Proof/Credibility** - Don't say "add social proof." Say "Include the 3x metric from the case study. Mention 2 recognizable customer names in their industry." Name only proof the research holds: never invent a customer, a metric or a result.
 
 **CTA** - Don't say "include CTA." Name the offer ask: "Reply-based question driving the walkthrough: 'Want me to walk you through how it works?'" Every email asks for the actual offer, including Email 1.
 
@@ -48,20 +48,21 @@ For each section, be specific and actionable:
 Lead with best value prop or insight. Establish relevance immediately. Close with the strongest, most direct offer CTA - not a soft warm-up or a diagnostic question.
 
 **Email 2-3 (Diversify):**
-Try new angles - case study, different pain point, lead magnet offer, industry insight. Each must be distinct from Email 1.
+Try new angles - case study, different pain point, lead magnet offer (only one that exists), industry insight. Each must be distinct from Email 1.
 
 **Final Email (Breakup - Second Strongest):**
 Earn the open with the second-best angle, then ask for the offer. Direct but respectful. **Never announce it as a follow-up or last attempt** ("Last note from me", "just following up") - email-review rejects that. Create urgency through value, not through "this is my last email."
 
-## Delay Guidelines
+## Delay Guidelines (wait days)
 
-- Email 1: 0 days
-- Follow-ups: 2-4 days between
-- Final: Can stretch to 5 days
+- The wait on Email N is the number of days **before Email N sends**, counted from the previous email. Email 1: **0**.
+- Send days **0/3/7/11** are stored as wait days **0/3/4/4**: not cumulative, and never shifted onto the previous step. Putting the gap after Email N onto Email N is the common off-by-one.
+- Follow-ups: 2-4 days between. Final: can stretch to 5 days.
+- State the cadence once at the top of the sequence (`Cadence: waitDays 0/3/4/4`) and on each email (`**Delay:** N days`) so copy and configuration read the same timing.
 
 ## Example Output
 
-### Email 1
+#### Email 1
 **Goal:** Create awareness through relevant insight
 **Delay:** 0 days
 
@@ -75,7 +76,7 @@ Share the surprising data point from company research about [topic]. Frame it as
 Light touch here - mention "we work with [customer type]" to establish context without heavy selling.
 
 **CTA:**
-Soft reply-based: "Curious if you're seeing this too?" Should feel like the start of a conversation.
+Direct reply-based ask for the offer: "Want me to walk you through how [client] fixes this?" Conversational, but a real ask, never a diagnostic question.
 
 **Tone:**
 Conversational, curious. 5-6 lines max. No bullet points.
@@ -85,7 +86,7 @@ This introduces the problem space. Sets up Email 2's case study by establishing 
 
 ---
 
-### Email 2
+#### Email 2
 **Goal:** Build credibility through social proof
 **Delay:** 3 days
 
@@ -99,7 +100,7 @@ Share the [Company X] case study. Focus on their situation before (similar to pr
 Include the concrete metric (e.g., "reduced [X] by 40%"). Mention 1-2 other recognizable customer names in their industry if available from research.
 
 **CTA:**
-Reply-based: "Want me to send the full case study?" or "Worth a quick chat to see if this applies?"
+Reply-based ask for the offer: "Worth a quick chat to see if this applies?"
 
 **Tone:**
 Slightly more confident than Email 1. Still conversational. 6-8 lines.
@@ -109,7 +110,7 @@ Builds on Email 1's problem awareness with proof it's solvable. Sets up Email 3'
 
 ---
 
-### Email 3
+#### Email 3
 **Goal:** Offer value through lead magnet
 **Delay:** 3 days
 
@@ -117,13 +118,13 @@ Builds on Email 1's problem awareness with proof it's solvable. Sets up Email 3'
 Acknowledge they're busy. No guilt trip about not replying.
 
 **Main Content:**
-Introduce [lead magnet] as a useful resource regardless of whether they work with us. Briefly explain what it contains and why it's relevant for their role.
+Introduce [lead magnet] (one the research shows is live) as a useful resource regardless of whether they work with us. Briefly explain what it contains and why it's relevant for their role.
 
 **Proof/Credibility:**
-Can mention how many people have downloaded it or one specific insight it contains.
+Can mention one specific insight it contains, or how many people have used it when the client gave that number.
 
 **CTA:**
-Click-based: Link to lead magnet. Frame as "no strings attached."
+Click-based: link to the lead magnet, framed as "no strings attached." When the offer is a meeting, pair the resource with the meeting ask.
 
 **Tone:**
 Helpful, generous. Short - 3-4 lines. Get to the point.
@@ -133,12 +134,12 @@ Provides value even if they don't reply. Creates another engagement opportunity 
 
 ---
 
-### Email 4
-**Goal:** Breakup - create closure
+#### Email 4
+**Goal:** Close strong with the second-best angle
 **Delay:** 5 days
 
 **Opening Hook:**
-Signal this is the final outreach. "Last note from me" or similar.
+Open with the second-strongest angle. Never announce this as the last email or a follow-up.
 
 **Main Content:**
 Reframe with second-strongest value angle. Be direct about why you reached out and what you think you could help with.
@@ -147,10 +148,10 @@ Reframe with second-strongest value angle. Be direct about why you reached out a
 One brief proof point if natural. Don't overload.
 
 **CTA:**
-Simple yes/no question. "Is this worth exploring, or should I close the loop?" Respectful but clear.
+Simple yes/no ask for the offer: "Worth a 15-minute walkthrough?" Respectful but clear.
 
 **Tone:**
 Direct, respectful. 4-5 lines max. No guilt, no desperation.
 
 **Sequence Context:**
-Closes the sequence. Gives them an easy way to say yes or no.
+Ends the sequence on the offer. Gives them an easy way to say yes or no.

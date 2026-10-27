@@ -1,13 +1,21 @@
 ---
 name: lead-magnet
-description: Ideate and design lead magnets for cold email campaigns. Covers both click-based (downloads, tools, signups) and reply-based (free trials, guarantees, done-for-you samples) campaign types. Use when a client needs a new lead magnet, when campaign-planning identifies a weak offer, or when the user wants to brainstorm offers for a specific ICP. Triggers on requests like "create a lead magnet for [client]", "brainstorm offers", "what lead magnet should we use", or when campaign-planning detects no strong lead magnet exists.
-model: opus
-thinking: true
+description: Propose lead magnets a company can actually deliver, for click-based and reply-based cold-email campaigns. Use when the offer is weak or missing. Triggers on "I need a lead magnet", "what can we offer instead of a demo", "lead magnet ideas".
 ---
 
 # Lead Magnet Skill
 
 Ideate and design lead magnets that attract ideal customers and make them more likely to buy the client's core offering. Supports both click-based campaigns (landing pages, downloads) and reply-based campaigns (free trials, guarantees, done-for-you).
+
+This is the optional offer stage of the campaign workflow (**create-campaign**, also installed as **cold-email-campaign**): run it before the plan when the client has no strong offer, or when the user asks for offer ideas. This skill designs the lead magnet; the client builds it on their own site or in their own tools.
+
+## Required inputs
+
+- **The campaign workspace** (`./cold-email/{slug}/`, passed by the orchestrator): read `research.md` there and write `lead-magnets.md` there. Without one, work from what the user gives you and return the output in the chat.
+
+## The rule: only real lead magnets reach copy
+
+A concept from this stage is a recommendation until the client has built it and confirmed it is live. campaign-planning, campaign-strategy and email-copywriting reference or link a lead magnet only when it really exists. Never invent a guarantee, a price, a trial length, a result or a statistic: every one comes from the client's research or the client.
 
 ## Core Philosophy
 
@@ -59,9 +67,9 @@ Diagnose issues the prospect doesn't fully realize. Best for problems that worse
 ### Tier 2: One-Step Solutions
 Solve one piece of a multi-step process. Perfect for complex B2B workflows.
 - Templates, calculators, single-feature tools
-- Lovable apps (beautiful, single-purpose tools)
+- Single-purpose apps (beautiful tools that do one job)
 - Chrome extensions, Slack/Teams bots
-- Workflow automation templates (Zapier/Make)
+- Workflow automation templates
 
 ### Tier 3: Samples & Trials
 Limited access to the core offering. Ideal for recurring solutions to recurring problems.
@@ -77,7 +85,7 @@ From tested lead magnet performance data:
 
 | Rating | Ideas |
 |--------|-------|
-| 5-star | Free public feature, Mastermind/Community, AI Advisor, "Done For You" Sample, Lovable App |
+| 5-star | Free public feature, Mastermind/Community, AI Advisor, "Done For You" Sample, Single-Purpose App |
 | 4-star | Scorecard, Video Course, Simulation Environment, Gamified Learning, Done-for-You Setup, AI Competitive Analysis, Freemium Plan, Free Trial, Usage-Based Trial, AI Prototype Access, Limited Premium Feature Access |
 | 3-star | Maturity Assessment, Custom Report Generator, Case Studies (best practices, failed implementations, general), Interactive Product Demo, Strategy Session, Developer Sandbox/API Access |
 | 2-star | Calculator with Benchmarks, State of Industry Report, Trend Prediction Report, Ultimate Guide/Ebook, Curated Toolkit/Resource Library |
@@ -85,34 +93,17 @@ From tested lead magnet performance data:
 
 **Rule of thumb**: Aim for 4-star or above. 3-star is acceptable if the client's constraints demand it. Below 3-star requires strong justification.
 
-See `references/lead-magnet-guide.md` for the full 36-idea table with descriptions.
+See `references/lead-magnet-guide.md` for the full 37-idea table with descriptions.
 
 ## Advanced Strategies
 
-### Trojan Horse Method
-Create tools that work standalone but work 10x better with the client's product.
-- Example: A project template that's good alone but amazing with their project management tool
-- The free tool creates natural desire for the full platform
+Full playbook with more examples: `references/lead-magnet-guide.md`.
 
-### Habit Builder
-Design daily-use tools that create habits leading to the client's product.
-- Example: A daily standup bot that eventually needs the full collaboration platform
-- Frequency of use drives conversion
-
-### Predictive Power Play
-Use AI/ML to predict future problems before they happen.
-- Examples: Churn prediction model, revenue forecasting tool, technical debt calculator
-- Analyze current state -> Predict future issues -> Position product as solution
-
-### AI Employee Preview
-Offer an AI agent that does real work for them.
-- Examples: AI SDR that books meetings, AI Analyst that generates reports
-- Upgrade path: More agents, more capabilities, full platform
-
-### Network Effect Play
-Build lead magnets that become more valuable as more people use them.
-- Example: Benchmark tools where users contribute anonymous data
-- Each new user makes it better for everyone
+- **Trojan Horse**: a tool that works alone but 10x better with the client's product (a project template that shines inside their PM tool). The free tool creates desire for the full platform.
+- **Habit Builder**: a daily-use tool that builds a habit leading to the product (a standup bot that outgrows into the full collaboration platform). Frequency of use drives conversion.
+- **Predictive Power Play**: AI/ML that predicts problems before they happen (churn model, revenue forecast, technical debt calculator). Analyze current state -> predict issues -> position the product as the solution.
+- **AI Employee Preview**: an AI agent that does real work (AI SDR booking meetings, AI analyst writing reports). Upgrade path: more agents, more capabilities, full platform.
+- **Network Effect Play**: a lead magnet that gets more valuable as more people use it (benchmarks built from anonymous user data). Each new user makes it better for everyone.
 
 ## Hook Formulas
 
@@ -124,6 +115,8 @@ Use these patterns to create urgency in the email promoting the lead magnet:
 4. **The Competitive Intelligence**: "Your competitors are already [doing X] - here's how to catch up in 5 minutes"
 5. **The Compliance Urgency**: "New [regulation] means you need to [action] by [date] or face [consequence]"
 
+Fill the brackets only with numbers and facts from the client's research or a source you can name.
+
 ## Reply-Based Design Principles
 
 For service/agency offers where the lead magnet is embedded in the cold email itself:
@@ -131,7 +124,8 @@ For service/agency offers where the lead magnet is embedded in the cold email it
 ### Done-For-You Samples
 - Offer to do a small piece of work for free as proof of capability
 - Must be specific enough to show expertise, small enough to be scalable
-- Example (Ken AI): "We'll send personalized emails to 5,000 of your ideal clients - if you don't get 20+ meetings in 90 days, you don't pay"
+- Example (an outbound agency): "We'll send personalized emails to 5,000 of your ideal clients - if you don't get 20+ meetings in 90 days, you don't pay"
+- Offer a guarantee only when the client offers it, with the client's own numbers and terms
 
 ### Guarantee Structures
 - Performance guarantee: "X results or you don't pay"
@@ -152,33 +146,39 @@ For service/agency offers where the lead magnet is embedded in the cold email it
 ## Workflow
 
 ### Step 1: Understand Client
+
 Load all available client data:
-- Read `{workspace}/research.md` - ICP, value prop, current offers, detailed research, pain points (`{workspace}` = the client campaign workspace folder (the orchestrator passes this path))
-- Read past plan folders in `{workspace}/` - Past campaigns and what offers were tested
-- Read supporting files in `{workspace}/` - Existing lead magnets, case studies
+- Read `research.md` in the campaign workspace - ICP, value prop, current offers, pain points, proof
+- Read `lead-magnets.md` there, when it exists - lead magnets already designed, and each one's status
+- Read what the user gave you - existing lead magnets, case studies, offers tested in earlier campaigns and how they did
 
 ### Step 2: Load Reference Material
+
 - Read `references/lead-magnet-guide.md` for full performance rankings and idea bank
 
 ### Step 3: Assess Existing Lead Magnets
+
 - What does the client already have? (case studies, tools, PDFs, free trials)
 - What has been tested in past campaigns? What worked?
 - What gaps exist?
 
 ### Step 4: Generate Concepts
+
 Generate 3-5 lead magnet concepts. For each:
 - Include both click-based AND reply-based options (minimum 1 of each)
 - Score against the Five Qualities framework
 - Match to the client's resources and capabilities
 - Consider implementation effort vs. expected impact
 
-### Step 5: Get CSM Input
-Present concepts to the CSM with scores and rationale. Ask:
+### Step 5: Get User Input
+
+Present concepts to the user with scores and rationale. Ask:
 - Which concepts align with the client's capabilities?
 - Does the client have resources to build/deliver this?
 - Any client preferences or constraints?
 
 ### Step 6: Detail Selected Concepts
+
 For selected concepts, produce the full output format (see below).
 
 ## Output Format
@@ -191,6 +191,7 @@ For each recommended lead magnet, output:
 **Type**: [Problem Revealer / One-Step Solution / Sample & Trial]
 **Campaign Type**: [Click-based / Reply-based / Both]
 **Rating Tier**: [5-star / 4-star / 3-star]
+**Status**: [idea / being built / live at <link>]
 
 ### Hook
 [One powerful sentence using specific data/problem that creates urgency]
@@ -229,7 +230,7 @@ client-research -> lead-magnet -> campaign-planning -> campaign-strategy -> emai
 ```
 
 ### Feeding into campaign-planning
-- The output `Lead Magnet/Offer` field in plan.md comes from this skill's recommendations
+- The plan's Offer and CTA come from this stage's recommendations, once the client agrees to the offer
 - If multiple lead magnets are recommended, campaign-planning can test them across campaigns
 
 ### Feeding into campaign-strategy
@@ -238,16 +239,13 @@ client-research -> lead-magnet -> campaign-planning -> campaign-strategy -> emai
 
 ### Feeding into email-copywriting
 - The hook formula and email integration notes guide how the copy references the offer
-- Click-based: Email drives to landing page with lead magnet
+- Click-based: Email drives to landing page with lead magnet (only once the page is live)
 - Reply-based: Lead magnet value proposition is embedded in email body
 
 ## Output Handling
 
-After generating lead magnet concepts:
+**With a campaign workspace:** after the user confirms, write `lead-magnets.md` at the workspace root (`./cold-email/{slug}/lead-magnets.md`), one `## Lead Magnet [N]` section per recommended concept, in the output format above. Keep one file, never a duplicate: when it exists, keep the entries already there and update each one's **Status**.
 
-### If a client workspace is specified (workflow mode):
-1. **Write lead-magnets.md**: Save to `{workspace}/lead-magnets.md`
-2. **Confirm**: Tell the CSM which concepts are recommended and why
+**Standalone, or ideas only:** present the output in the chat.
 
-### If standalone mode:
-1. **Return inline**: Present the output inline to the user
+Then tell the user which concepts are recommended and why.

@@ -4,24 +4,23 @@ _How to write email copy_
 **0. The frame: a one-on-one favor, not a marketing email**
 
 *   AI personalization renders every email as an individual note to one person - write it as one human typing to another because you found something that helps them.
-*   You're doing them a favor: handing over something free or fixing a problem they have. Features and "we offer / our platform provides" framing are marketing-email tells - say what THEY get, in plain verbs.
+*   You're doing them a favor: handing over something on you or fixing a problem they have. Features and "we offer / our platform provides" framing are marketing-email tells - say what THEY get, in plain verbs.
 *   Full frame, tests, and the deliberate-imperfection spec in `references/sound-human.md`.
 
-**1. Value Proposition Expansion**
+**1. Value Proposition Compression (the core skill)**
 
-*   Start with a clear value proposition
-*   Expand based on that foundation
-*   Ask: What angles can I put on this?
-*   What case studies support this?
-*   What social proof building blocks can I use?
-*   Build outward from the core value
+*   Write the offer as ONE plain sentence first: concrete deliverable + who it's for + what they get. "We'll send 3,000 personalized emails to your ideal clients on us." If you can't write that sentence, you don't understand the offer yet - go back to the research.
+*   That sentence is the spine of Email 1. Everything else in the sequence supports it: proof, risk reversal, close.
+*   Explore angles, case studies, and social proof building blocks - then compress each back to its fewest words. The best value prop and use case in as few words as possible IS the job.
+*   Concrete nouns and numbers over adjectives, mechanism in verbs ("we write the copy, build the list, handle everything"), objections killed in one line ("You don't need to pay anything, just sign up if you want it").
+*   Study `references/gold-standard.md` - the two operator-written campaigns are the bar.
 
 **2. Campaign Strategy Driven (When Strategy Provided)**
 
-*   Start with the email sequence blueprint from Campaign Strategy
-*   Each email's `primary_goal` and `description` guides your writing
+*   Start with the segment's strategy (`## Strategy - <segment name>`): its email sequence blueprint is the plan, and your copy is the execution layer
+*   Each email's **Goal**, **Hook**, **Content**, **Proof**, **CTA** and **Tone** guide your writing; its **Delay** is the step's wait days
 *   Insert AI variable placeholders where the strategy specifies
-*   Let the strategy's structure guide your copy flow
+*   Let the strategy's structure guide your copy flow; the funnel type (click, reply or story) sets the technique, length and tone (`references/copywriting-guide.md`)
 
 ### Formatting
 #### Basic Rules
@@ -30,8 +29,9 @@ _How to write email copy_
 *   For bullets, use simple dashes (the minus sign on keyboard)
 *   For numbered items, write manually as 1, 2, 3, 4 (no auto-formatting)
 *   No bold, italic, or other text styles
-*   **One link maximum** - Must be transparent (not embedded)
-*   Don't use special dash characters; use only the simple dash from keyboard
+*   **One link maximum per email, signature company link included** - a markdown link on a few plain words, `https` only. Never a bare URL and never link text that reads like a web address (`acme.com`): click tracking routes the link through a tracking domain, and a visible host that does not match reads as phishing
+*   Don't use special dash characters (no em or en dashes); use only the simple dash from keyboard
+*   Numbers as digits: "40-50%", "3,000 emails", never "forty to fifty percent"
 
 #### AI Variable Placeholders
 When including AI personalization variables in email copy:
@@ -39,23 +39,22 @@ When including AI personalization variables in email copy:
 *   Match the variable name from the Campaign Strategy
 *   Common placeholders: `{{First Line}}`, `{{PS Line}}`, `{{Subject Line}}`, `{{Industry Hook}}`
 *   Place variables exactly where the strategy specifies
-*   **Use stable Title Case display names** - do not mix `{{First Line}}` and `{{first_line}}`, and do not create alternate spellings like `{{Subject line}}`
-*   **Write the double-brace form directly** - `{{First Line}}` is the canonical form personalization tools and LLMs expect. (The legacy `[First Line]` square-bracket form still often auto-converts for old files, but use `{{...}}` in all new copy.)
+*   **Use stable Title Case display names** - never a lowercase or snake_case spelling of `{{First Line}}`, and no alternate spellings like `{{Subject line}}`
+*   **Write the double-brace form directly** - `{{First Line}}` is exactly what personalization tools and LLMs resolve. Never use square brackets (`[First Line]`); the lint rejects them as unresolved placeholders.
 
 #### Lead Variables (Contact Data)
-Lead variables are auto-resolved from contact data. Use single curly braces with camelCase:
+Lead variables are auto-resolved from contact data. Use single braces with camelCase:
 *   `{firstName}` - Contact's first name (most common, used in greetings)
 *   `{lastName}` - Contact's last name
-*   `{fullName}` - Contact's full name
 *   `{company}` - Company name (NOT `{company_name}`)
+*   `{companyDomain}` - Company domain
 *   `{title}` - Job title
-*   `{industry}` - Company industry
-*   See `references/lead-variables.md` for the full list of 28 available variables
+*   Only the 38 lead variables listed in `references/lead-variables.md` (the lint contract in **email-copywriting**) pass the lint, and several of those are legacy names sending tools do not map or render blank at send time; which ones are safe is in that file
 *   **Never use snake_case** - `{first_name}` is WRONG, `{firstName}` is correct
 
 #### Subject Lines as AI Variables
 *   **Default approach**: Subject lines should usually be AI personalization prompts, not static text
-*   Use `{{Subject Line}}` placeholder and create a corresponding AI prompt
+*   Use the `{{Subject Line}}` placeholder on every step (follow-ups included) and create a corresponding AI prompt
 *   Static subject lines are acceptable only when:
     - Testing multiple static options explicitly requested by user
     - Subject line is part of a specific tested formula
@@ -159,19 +158,19 @@ Sometimes your value proposition alone is enough. Example: "Our business saves 2
 *   Name dropping (Google, Microsoft, Apple, etc.)
 
 **Note on Statistics:**
-*   Overused marketing pattern
-*   Flagged as spam by algorithms
-*   Use words instead of percentages when possible
+*   Generic market percentages ("80% of companies...") read like marketing; use words instead ("almost no one")
+*   A specific, true count from a real customer is proof, not a statistic: "7 meetings per 10k contacts" sells
+*   Never a `%` or `$` in a subject line, and never stack several figures in one sentence (`references/spam-words.md`)
 
 **3. Risk Reversal**
 *   Objection handling
 *   Guarantees
-*   Free trials/samples
+*   Trials and samples (never the word "free" in copy - see `references/spam-words.md`)
 
 **Important:** Risk reversal is less relevant in cold emails since the goal is to make them reply, not buy. Risk concerns typically arise at purchase moment, not interest stage.
 
 **Exception:** Powerful for creating compelling offers
-Example: "We'll create 10 LinkedIn posts for free. If they don't beat your current performance, we'll pay you $500."
+Example: "We'll create 10 LinkedIn posts on us. If they don't beat your current performance, we'll pay you $500."
 
 ### CTA (Call to Action)
 #### CTA Rules
@@ -197,7 +196,7 @@ Best for:
 *   Asking directly for a call
 *   Gauging interest in value proposition
 *   When email focused on offer/value prop
-*   Example: After offering "10 free LinkedIn posts"
+*   Example: After offering "10 LinkedIn posts on us"
 
 **2. Click-Based CTAs**
 Best for:
@@ -205,6 +204,7 @@ Best for:
 *   Sharing PDFs, interactive tools, AI tools
 *   Sharing case studies
 *   Video content
+*   A click CTA carries the email's one link, so the signature company name stays plain in that email
 
 **Key Insight:**
 *   More people click than reply
@@ -217,109 +217,39 @@ Follow the CTA approach specified in the Campaign Strategy. If strategy says "re
 
 ### Signature
 
-**HARD RULE: every email signs off with the single token `{sender_signature}`** on its own line, in place of the closer + name + title. Do not hand-type "Best,", a name, a title, or a tagline as a literal signature in the body. The sending inbox owns its signature and injects it through `{sender_signature}`, which keeps sends consistent across inboxes and lets sender identity vary at the inbox layer. Use it on **every** email, not just the first.
+**HARD RULE: every email signs off with `{sender_signature}` on its own line, after the CTA.** The sending tool swaps it for the sending inbox's own signature, so multi-inbox sends stay consistent and sender identity varies at the inbox layer. Never hand-write the closer, name and title as a literal signature.
 
-Placement: `{sender_signature}` goes where the sign-off was, after the CTA. A PS variable (`{{PS Line}}` / `{{Final PS Line}}`) goes on its own line **after** `{sender_signature}`.
-
-Because the same inbox signature renders on every email, the older position-based strategy (heavy social-proof signature on Email 1, minimal on follow-ups) no longer applies. Keep the inbox signature clean and consistent, and put any credibility in the **body**, where it can vary by email. The formulas below describe what a good **inbox signature** should contain (configured once per inbox) - they are not something you paste into each email body.
-
-#### What a good inbox signature contains
-
----
-
-If the inbox signature includes a credential, keep it semi-casual with one biggest credibility marker. This establishes authority without being pushy.
+**When the sending tool has no signature variable**, use a two-line block with only `{sender_first_name}` and `{sender_last_name}` as sender variables.
 
 **Formula:**
-```
-[Signoff]
-[First name] [Last Name]
-[Position] at [Company]
-[Biggest social proof/credibility marker]
+```markdown
+[Greeting - Best, Best regards, Cheers, etc.]
+{sender_first_name} {sender_last_name} - [title] at [Client company name](https://client-site.example)
 ```
 
-**Signoff Options:**
-*   Best,
-*   Cheers,
-*   Best regards,
+**Company name as a link (DEFAULT in the two-line block):** link the client company name in the signature. That link is the email's one link (the lint allows at most 1 link per email). In an email whose CTA already carries a link, write the company name plain.
 
-**Social Proof Examples:**
-
-*Exit/Revenue:*
-*   "$169M exit"
-*   "8-figure founder"
-*   "$50M ARR"
-
-*Client Results:*
-*   "273 companies scaled"
-*   "1,000+ clients served"
-*   "Generated $2.3M for SaaS companies"
-
-*Credibility Markers:*
-*   "Ex-Google"
-*   "YC W21"
-*   "Forbes 30 Under 30"
-
-*Industry Recognition:*
-*   "#1 Cold Email Agency"
-*   "Top 10 Marketing Expert - Inc"
-*   "TechCrunch Featured"
-
-**Complete Example:**
-```
-Cheers,
-Ryan Allis
-Founder of SaasRise
-$169M exit
-```
-
-**What to Avoid:**
-*   Long titles or multiple credentials
-*   Weak social proof ("5 years experience")
-*   Generic descriptions ("Marketing Expert")
-*   Multiple social proof points (pick your strongest ONE)
-
----
-
-#### Keep it minimal
-
-A clean inbox signature beats a busy one. One credential at most. Authority is better carried in the body than repeated under every email.
-
-**Formula:**
-```
-[Signoff]
-[Full Name]
-```
-
-**Signoff Selection by Audience:**
-Match the signoff formality to your ICP:
-
-| Audience Type | Recommended Signoffs |
-|---------------|---------------------|
-| Enterprise / C-Suite / Finance / Legal | Best regards, Best, |
-| Mid-market / Technical / SaaS | Best, Cheers, |
-| SMB / Startups / Creative | Cheers, Best, |
+- **Default URL:** the company's root domain homepage, from the client's website in the company context; strip `www.`; always `https://`.
+- **Deep links are fine when they fit** - product page, case study, vertical landing, or other destination if it is a stronger signature click than the homepage for this campaign.
 
 **Examples:**
-```
-Best regards,
-Ryan Allis
-```
-
-```
-Best,
-Sarah Chen
-```
-
-```
+```markdown
 Cheers,
-Michael Torres
+{sender_first_name} {sender_last_name} - Founder at [Acme](https://acme.com)
+
+Best,
+{sender_first_name} {sender_last_name} - CEO at [Acme](https://acme.com/pricing)
 ```
 
-**Why minimal signatures work for follow-ups:**
-*   Maintains conversational tone appropriate to continued dialogue
-*   Avoids repetition of credibility already established
-*   Keeps focus on the email content
-*   Feels like continued conversation, not repeated pitch
+The title and company name are literal campaign/client values from context, not sender variables.
+
+**Placement:** the signature (the `{sender_signature}` line or the block) goes after the CTA. A PS variable (`{{PS Line}}` / `{{Final PS Line}}`) goes on its own line **after** the signature. Signoff choice by audience: the Signature rules in **email-copywriting**.
+
+**What to avoid:**
+*   A hard-coded sender name, or any sender variable besides `{sender_signature}`, `{sender_first_name}` and `{sender_last_name}`
+*   An unlinked company name (plain `Acme`), except in an email whose one link is the CTA
+*   Extra social-proof lines, taglines, phone numbers, or a second link
+*   Different signature complexity by email position
 
 ### PS Line
 #### The Power of PS
@@ -339,7 +269,7 @@ The PS-Line is one of the most overpowered lines in cold email sequences, but ev
 *   Treat as "personal space" for missed details
 *   Technically "post-scriptum" but use as personal addition
 
-**Frequency:** Use PS lines in 2-3 out of 5 emails (not every email)
+**Frequency:** Use PS lines in at most 1-2 emails of the sequence (default: Email 1 and the last email), never every email
 
 **AI Variable Integration:**
 The `{{PS Line}}` variable is perfect for AI personalization - it's where prospects expect personal touches. When using this variable, ensure the template PS (if any) complements rather than duplicates the personalized content.
@@ -355,8 +285,7 @@ If body discusses offer, PS can add quick social proof - two different ideas tha
 - Never write from the marketer's chair. If the email is a list of what "we" do or offer, it's a brochure - rewrite it as a note about what this one reader gets (the favor frame in `references/sound-human.md`).
 - Skip straight to the topic and to the best piece of information you have. Instead of "Quick follow-up - most advisors know retention beats acquisition", use "Retention beats acquisition".
 - Don't ever use Quick follow-up, Noticed that, Just wanted to share, and all other usual salesy language.
-- **In the last email, never announce it as a follow-up or last attempt.** Banned: "Last email", "Last note from me", "Just following up", "Following up", "Circling back", "Checking in", "Wanted to follow up", "Bumping this", "One last try". This rule keeps getting violated - the review pass rejects on it. The final email opens on a real idea and closes on the offer CTA.
+- **In the last email, never announce it as a follow-up or last attempt.** Banned: "Last email", "Last note from me", "Just following up", "Following up", "Circling back", "Checking in", "Wanted to follow up", "Bumping this", "One last try". This rule keeps getting violated - email-review rejects on it. The final email opens on a real idea and closes on the offer CTA.
 - **Spam words are budgeted, not vibes**: the tiered policy (NEVER / HIGH / MEDIUM, max 1-2 MEDIUM per email, subject lines fully clean) plus safe alternatives lives in `references/spam-words.md`. "free" and "credit card" are hard-banned. Apply it while drafting, not just at review time.
 - **Never make a false offer claim** - e.g. don't write "no card needed" if a card is actually required. Every claim must match the client's real offer.
 - **No AI-tells**: the lexicon (delve, leverage, seamless, "I hope this email finds you well"...), the structures ("It's not just X, it's Y", tidy triads, metronomic sentences), and the human-voice techniques live in `references/sound-human.md`. Draft in the ICP's language per the Voice Card, and read every email aloud before handing it off.
-

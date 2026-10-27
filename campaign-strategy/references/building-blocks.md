@@ -27,8 +27,8 @@ When creating campaigns, think in terms of testable building blocks:
 
 **Offer Blocks:**
 - Demo/meeting request
-- Free resource/lead magnet
-- Case study share
+- Free resource/lead magnet (only one that exists)
+- Case study share (only a real one)
 - Quick question/reply
 
 **Sequence Structure Blocks:**
@@ -41,5 +41,7 @@ When creating campaigns, think in terms of testable building blocks:
 1. **Start with hypotheses** - What combinations do you think will work?
 2. **Create variations** - Build different combinations of blocks
 3. **Test in parallel** - Run multiple campaigns simultaneously
-4. **Measure and learn** - Which combinations perform best?
+4. **Measure and learn** - Which combinations perform best, by reply rate, positive (interested) reply rate and clicks? Count replies as distinct contacts, leave out out-of-office, and never judge by opens
 5. **Double down** - Scale what works, cut what doesn't
+
+Before you cut a block, rule out the other causes: read the reply classification (interested replies filed wrong make good copy look dead), check bounces (a campaign at about 3% or 100 bounces never got a fair test), and below about 100 sends compare absolute counts, not rates.

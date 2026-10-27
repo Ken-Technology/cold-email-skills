@@ -2,7 +2,7 @@
 
 **Your agent can write code. Now it can write cold email that gets replies.**
 
-10 free, open-source Agent Skills for planning and writing cold-email campaigns, extracted from the playbook we run our agency on. MIT licensed. No account, no API keys, no telemetry. Everything is written to plain markdown files on your machine.
+12 free, open-source Agent Skills for planning and writing cold-email campaigns, extracted from the playbook we run our agency on. MIT licensed. No account, no API keys, no telemetry. Everything is written to plain markdown files on your machine.
 
 ```bash
 npx skills add Ken-Technology/cold-email-skills
@@ -68,6 +68,8 @@ Each skill is a plain markdown file. Worst case, open the `SKILL.md` and paste i
 | Skill | What you get |
 | --- | --- |
 | [cold-email-campaign](cold-email-campaign/SKILL.md) | The orchestrator. Runs the whole playbook end to end and stops at ready-to-send files. |
+| [create-campaign](create-campaign/SKILL.md) | The same orchestrator under the name Ken uses for it. Install either one. |
+| [knowledge-setup](knowledge-setup/SKILL.md) | A company knowledge folder: overview, ideal customer, pricing, proof, competitors and voice, each fact with its source. |
 | [client-research](client-research/SKILL.md) | A research doc synthesized from your notes, meeting transcripts, and website. |
 | [search-strategy](search-strategy/SKILL.md) | Your ICP turned into portable search filters for Apollo, Sales Nav, Clay, or any list tool. |
 | [qualification](qualification/SKILL.md) | AI prompts that evaluate whether a prospect actually fits your audience. |
@@ -79,6 +81,8 @@ Each skill is a plain markdown file. Worst case, open the `SKILL.md` and paste i
 | [lead-magnet](lead-magnet/SKILL.md) | Lead magnet ideas and designs for click-based and reply-based campaigns. |
 
 Run the orchestrator for the full pipeline, or any skill on its own - they all read and write plain files.
+
+These are the same skills Ken's own agents run, generated from the source Ken ships in its product with the platform steps left out, so the free text improves whenever ours does.
 
 ## What these skills do not do
 
@@ -116,7 +120,9 @@ Fork it. The copy rules in `email-review`, the sequence blueprints in `campaign-
 
 ## Contributing
 
-Issues and PRs welcome. If a skill produced weak output, open an issue with the prompt you used and the artifact it wrote - that is the most useful bug report for a skills repo.
+Issues and PRs welcome. The skill files are generated from Ken's source, so a PR here is carried into that source and comes back with the next sync rather than merged as is. If a skill produced weak output, open an issue with the prompt you used and the artifact it wrote - that is the most useful bug report for a skills repo.
+
+Maintainers: nothing syncs this repo automatically. Every skill folder, this README and LICENSE are regenerated from `mcp/src/ken_mcp/skills` in Ken's ken-backend repo. From ken-backend, run `cd mcp && uv run python scripts/build_skill_packages.py write --files-out <new empty dir>`, replace this repo's skill folders, README and LICENSE with that directory's contents, and open a PR. Do not edit the skill files here by hand.
 
 ## License
 

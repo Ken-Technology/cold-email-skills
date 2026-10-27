@@ -1,236 +1,171 @@
 ---
 name: prompt-writer
-description: Generate AI personalization prompts for cold email campaigns. Reads the AI variables from a campaign strategy and outputs detailed prompts you can run in any personalization tool or LLM to tailor each email per prospect. Use after campaign strategy, or when creating prompts for an existing sequence. Triggers on "write prompts for this campaign", "generate personalization prompts".
-model: sonnet
-thinking: true
+description: Write the AI personalization prompts behind each variable in a cold-email sequence (first lines, subject lines, PS lines) and test them on sample prospects. Use after the copy is approved. Triggers on "write the personalization prompts", "write a first line prompt", "personalize these emails".
 ---
 
 # Prompt Writer Skill
 
-Generate detailed AI personalization prompts based on campaign strategy AI variables. These prompts instruct your personalization tool or the LLM to create personalized content for each prospect.
+Write the AI personalization prompts (AI variables) for one campaign segment into the segment's `prompts.md`, with an optional rewriting steering paragraph, and test each prompt by hand on 3 to 5 sample prospects in any LLM. The user runs them per prospect in their own personalization tool (an AI column in Clay, their sending tool's AI step, or any LLM). You write only the **user prompts** (`to_output: true`) and the optional steering paragraph; the supporting context (who the sender is, the company context, the writing rules, the email sequence) comes from `research.md` and `emails_v2.md` when they run.
 
-## Output Contract
+Never send or launch anything. Removing a variable from `prompts.md` happens only after the user asks for it.
 
-`prompts.md` is the handoff artifact for personalization. Hard rules this skill must honor:
+**Where this fits:** after **campaign-strategy**, **email-copywriting** and **email-review** have set the AI variable names and placed their `{{Title Case}}` tokens in `emails_v2.md`; the last step before the segment is ready to send.
 
-- `## User Prompts (To output: true)` H2 heading - exact phrasing.
-- One H3 per variable using Title Case (`### First Line`, not `### first_line`). H3 name is ≤30 chars.
-- Every H3 must contain a `**Prompt**:` marker followed by the prompt text.
-- Prompt text ≤4096 chars. Runs until next `### `, `## `, or `---`. Do NOT use `---` inside a prompt body - it cuts the prompt short.
-- Variable names must match exactly what `emails_v2.md` uses in `{{Title Case}}` braces (e.g. `{{First Line}}`, `{{PS Line}}`, `{{Subject Line}}`).
-- Optional `## Rewriting Instructions` H2 at the bottom - a short steering paragraph for a rewriter pass, if you use one.
+## Inputs
 
-## Plan Folder Resolution
+`{workspace}` = the campaign workspace (default `./cold-email/{slug}/`); `{segment_folder}` = the segment's folder in it (`0 - default/`, `1 - {segment-slug}/`).
 
-This skill receives a `{segment_folder}` path (e.g., `{workspace}/03-15 - plan 1/1 - early-stage/`). Resolve `{plan_folder}` as the **parent directory** of `{segment_folder}` when you need plan-level files such as `plan.md`.
+- **Strategy AI variables** (name, placement, short description): the AI variables section of `{segment_folder}/strategy.md`, or from the caller.
+- **The sequence:** `{segment_folder}/emails_v2.md`, the reviewed copy (`emails.md` when there is no v2 yet). Every `{{Title Case}}` token in a subject or body needs a prompt.
+- **Written prompts:** `{segment_folder}/prompts.md` when it exists.
+- **Company context:** the `## Company Context` section of `{workspace}/research.md` (its summary when there is none), plus the rest of the research and the client notes in `{workspace}/notes.md`.
+- **Data sources:** what the user's personalization tool gives the AI for each prospect (see Data Source Constraints).
+
+The prompts live in `{segment_folder}/prompts.md`.
+
+## Live constraints (HARD)
+
+Personalization tools enforce limits like these, and the copy relies on them. Breaking one fails the import or silently breaks the sequence.
+
+| Constraint | Rule |
+|------------|------|
+| Variable name | Title Case plain text (`First Line`, `Subject Line`), no underscores, colons or special characters, **max 30 characters** |
+| Prompt text | Non-empty, **max 4096 characters**, no `---` line inside |
+| Name uniqueness | Unique after lowercase snake_case normalization (`Subject Line` collides with `subject_line`) |
+| Sequence match | Names match the sequence's `{{Title Case}}` tokens exactly (`{{First Line}}` needs a variable named `First Line`) |
+| One value per LEAD | One prompt produces one value per lead. A token reused in Emails 1-3 sends the same sentence three times (previews often show it filled on Email 1 and blank later - blank means reused, not missing). Distinct openers need distinct names (`First Line`, `Bump First Line`, `Nudge First Line`). Reuse is right only for an identical value, such as `{{Subject Line}}` on every subject. If the copy reuses a body token across emails, flag it back to **email-copywriting** instead of writing one shared prompt. |
+
+**Good names:** `First Line`, `Subject Line`, `PS Line`, `Role Pain Point`
+**Bad names:** `personalized_first_line`, `campaign_name:company_context`, `subject_line`
+
+Keep it to 3-5 output variables per email: each one adds processing time, and over-personalizing every email is the most common operator complaint.
 
 ## Execution Tasks
 
-**Execute these tasks in order. Do NOT skip any task unless noted.**
+Run these in order.
 
-### Task 1: Load Context
-- [ ] Read `{segment_folder}/strategy.md` - Extract AI variables section
-- [ ] Read `{segment_folder}/emails_v2.md` - Reviewed email copy (fall back to `emails.md` if not found)
-- [ ] Read `{workspace}/research.md` - ICP, value prop, messaging themes, product info, case studies (`{workspace}` = the client campaign workspace, default `./cold-email/{slug}/` under the current directory)
-- [ ] Read `{workspace}/notes.md` (if exists) - Client-specific preferences
+### Task 1: Load context
+- [ ] Confirm the segment folder.
+- [ ] Confirm the data sources the user's tool gives the AI (Inputs). If they don't know, do not stop: use the safe defaults below.
+- [ ] Read `emails_v2.md` and list every `{{Title Case}}` token.
+- [ ] Read the segment's `prompts.md` when it exists.
+- [ ] Load the strategy's AI variables, the company context, research and client notes.
+- [ ] Read the prompt engineering guide: `references/prompt-engineering.md`.
 
-### Task 2: Build User Prompts
-> **Note**: You write **user prompts** that generate personalized variables (`to_output: true`). Company context, base rules, and the email sequence are supporting context for the LLM - pull them from research and the sequence file rather than inventing a separate backend. The default rewriting rules (core principles, style, spam/deliverability, flow) are tool-side if your stack rewrites outputs - you SHOULD still write a short optional steering paragraph for rewriting (see Task 2b). The `to_rewrite` field on each user prompt controls whether that variable's output should go through a rewriter.
+### Task 2: Draft user prompts (in chat)
+- [ ] Expand each strategy variable (and every sequence token) into a full prompt.
+- [ ] Base Subject Line, First Line, PS Line, Role Pain Point, Industry Context and Company Size Context on the Standard Variable Templates.
+- [ ] Apply the Prompt Customization Rules (no examples in the standard variables).
+- [ ] Use only valid data sources for this campaign.
+- [ ] Include a **Subject Line** variable when the sequence uses `{{Subject Line}}`, from the template unless the strategy defined it.
+- [ ] For a variable whose blank output would break the email (usually First Line), plan a **Fallback**: one plain-text sentence, no `|`, `{` or `}`.
+- [ ] Show the full draft to the user for approval. Do not save yet.
 
-- [ ] Read `references/prompt-engineering.md` for guidance
-- [ ] For each AI variable in strategy.md, expand into detailed prompt
-- [ ] Use Standard Variable Templates as base (subject line, first line, PS line)
-- [ ] Apply Prompt Customization Rules (no examples for standard variables)
-- [ ] Ensure data sources are valid (LinkedIn and website only)
+### Task 2b: Rewriting steering (optional, recommended)
+- [ ] Pull voice and tone cues from the company context, `research.md`, `emails_v2.md` and `notes.md`.
+- [ ] Draft 2-10 sentences on voice, sentence rhythm, sequence flow or campaign-specific anti-patterns (see Rewriting Instructions).
+- [ ] Do not repeat generic rewriting defaults (no em-dashes, spam words, AI-tells, formatting).
 
-### Task 2b: Write Rewriting Instructions (Optional but Recommended)
+### Task 3: Self-review (REQUIRED before saving)
 
-If the campaign will run a rewrite pass on personalization outputs, write a short steering paragraph (2-10 sentences) that tunes the rewriter for this specific client/segment. See the "Rewriting Instructions" section below for what to include and what to avoid.
+One inline pass in the same turn; apply fixes, then present the revised draft if anything material changed. Checklist: `references/review-workflow.md`.
 
-- [ ] Pull voice/tone cues from `{workspace}/research.md`, `emails_v2.md`, and `{workspace}/notes.md`
-- [ ] Draft a 2-10 sentence steering paragraph focused on voice, sentence structure, sequence flow, or campaign-specific anti-patterns
-- [ ] Do NOT duplicate generic default rules (em-dashes, spam words, AI-tells, formatting)
-- [ ] Omit the section if the campaign has no distinctive voice/flow requirements
+Priority: conversation feedback, then client notes, then the strategy's variable set, then the Prompt Customization Rules, then data source constraints (non-negotiable).
 
-### Task 3: Internal Text Review (REQUIRED)
+**Reject or fix any prompt that:**
+- references news, press, funding, events, non-LinkedIn social media or blog content;
+- adds examples to First Line, PS Line or Subject Line (unless heavily customized);
+- uses a PS format other than `PS: ` (not `PS -`, `PS.` or a bare `PS`);
+- adds "Quick question" or typical outreach phrasing to the subject line;
+- rewrites the PS or Subject Line template wholesale (slight changes only);
+- puts lead-variable syntax (`{firstName}`) inside the prompt text;
+- leaves a sequence token without a prompt, or a name that does not match its token.
 
-Run an internal text review of the drafted prompts before saving. This is a quality pass over the draft - not a live run against contacts.
+### Task 4: Write prompts.md (after user approval)
 
-Dispatch a subagent to review the drafted prompts (or run an internal review pass over the drafts). The reviewer should score and revise against these priorities:
-
-1. HIGHEST PRIORITY - Client notes from `{workspace}/notes.md` (if exists)
-2. Campaign strategy from `{segment_folder}/strategy.md`
-3. CRITICAL: Prompt Customization Rules Checklist from review-workflow.md (MANDATORY)
-4. Data source constraints from SKILL.md
-
-Check:
-- MANDATORY: Prompt Customization Rules Checklist (examples policy, PS line format, subject line guidelines)
-- All AI variables from strategy.md have prompts
-- NO invalid data sources (news, funding, events, social media, blogs)
-- Prompts specify: what to generate, data sources, tone, constraints, fallbacks
-- Variable names match strategy.md exactly (Title Case; same names as `{{Title Case}}` in the emails)
-
-REJECT any prompt that:
-- References news articles, press releases, funding, events, social media (except LinkedIn), or blog content
-- Adds examples to First Line, PS Line, or Subject Line prompts (unless heavily customized)
-- Uses wrong PS format (must be "PS: " not "PS -" or "PS." or just "PS")
-- Adds "Quick question" or typical outreach messaging to subject line
-- Completely rewrites PS or Subject Line templates (only slight modifications allowed)
-
-Output a review with:
-- Overall score (1-5)
-- Prompt Customization Rules violations (if any)
-- Data source violations (CRITICAL)
-- Missing variables
-- Required fixes
-
-Then incorporate the reviewer feedback:
-- [ ] Fix all data source violations
-- [ ] Add missing variables
-- [ ] Apply client-specific preferences
-- [ ] Verify all constraints are met
-
-If the user passed `--skip-review`, skip this task and continue to Task 4.
-
-### Task 4: Output Final Prompts
-- [ ] Write `prompts.md` to the segment folder
-- [ ] Confirm to user prompts are saved and ready to run in their personalization tool or LLM
-
----
-
-## Required Context
-
-Before generating prompts, load:
-
-1. **Read `{segment_folder}/strategy.md`** - Get AI variables section with prompt_name, prompt_location, prompt_description
-2. **Read `{workspace}/research.md`** - Understand ICP, value prop, messaging themes, detailed product info, case studies
-
-## Input: Campaign Strategy AI Variables
-
-The strategy.md contains an AI variables section like:
-
-```json
-[
-  {
-    "prompt_name": "personalized_subject_line",
-    "prompt_location": "subject_line",
-    "prompt_description": "Short description of what this variable should do"
-  },
-  ...
-]
-```
-
-Your job is to expand each `prompt_description` into a full, detailed prompt.
-
-## Output Format
-
-### What You Write
-
-You only need to write **user prompts** (`to_output: true`) that generate personalized variables. Supporting context for the LLM (who the sender is, company overview, style rules, the full email sequence) should come from research.md and emails_v2.md when the user runs these prompts - do not re-author that stack inside every variable prompt.
-
-### Prompt Naming Convention
-Prompt names must be short, plain text with Title Case. No underscores, colons, or special characters.
-- Good: "First Line", "Subject Line", "PS Line"
-- Bad: "personalized_first_line", "campaign_name:company_context", "subject_line"
-
-**One prompt = one value per LEAD, not per email (HARD).** Personalization tooling generates a single value per prompt per lead; every email that references the same token renders the identical text. If the copy reuses `{{First Line}}` in Emails 1-3, the same opening sentence sends three times (preview/approval views typically show it filled on Email 1 and blank on later emails - blank means reused, not missing). Each email that needs its own opener gets its own distinct-named prompt: "First Line", "Bump First Line", "Nudge First Line". Reuse is correct only when the identical value is wanted on every step (`{{Subject Line}}` in every subject). If emails.md reuses a body token across emails, flag it back to email-copywriting instead of writing one shared prompt.
-
-These names must match the `{{Title Case}}` placeholders in the email copy exactly.
-
-Generate `prompts.md` with this structure:
+Write `{segment_folder}/prompts.md` in this shape:
 
 ```markdown
 # AI Personalization Prompts
 
-Campaign: [campaign folder name]
-Generated: [date]
+Campaign: [campaign name from plan.md] | Segment: [segment folder name]
+Written: [date]
 
 ## Variables Overview
 
-| Variable | Location | Email(s) | Rewrite |
-|----------|----------|----------|---------|
-| [name] | [location] | [1/2/3/all] | [yes/no] |
+| Variable | Location | Email(s) | Rewrite | Fallback |
+|----------|----------|----------|---------|----------|
+| Subject Line | subject | all | no | - |
+| First Line | opener | 1 | yes | "..." |
 
 ## User Prompts (To output: true)
 
-These prompts generate the actual AI variables that appear in the copy:
-
-### [Prompt Name]
-**Location**: [prompt_location]
-**Email(s)**: [email_number or "all"]
-**Rewrite**: [yes/no]
+### Subject Line
+**Location**: subject
+**Email(s)**: all
+**Rewrite**: no
 
 **Prompt**:
-[Full detailed prompt text]
+[full text]
 
----
+### First Line
+**Location**: opener
+**Email(s)**: 1
+**Rewrite**: yes
+**Fallback**: [one plain sentence]
 
-[Repeat for each variable]
+**Prompt**:
+[full text]
 
 ## Rewriting Instructions
-
-[2-10 sentence steering paragraph that tunes voice, tone, or sequence flow for this campaign. Omit this H2 section entirely if the campaign has no distinctive voice/flow requirements. Do NOT duplicate generic default rules - focus only on what makes THIS client/campaign distinctive.]
+[2-10 sentences, or leave this section out]
 ```
+
+- One H3 per variable, named exactly as its `{{Title Case}}` token in `emails_v2.md`. The prompt text runs from `**Prompt**:` to the next `### `, `## ` or `---` line, so never put a `---` line inside a prompt.
+- Write **every** sequence token plus Subject Line. When `prompts.md` exists, change only the prompts that changed and keep the rest as they are.
+- `Rewrite`: no for Subject Line and other short keep-as-is outputs, yes for First Line, PS Line and body variables (see Rewriting Instructions).
+- Remove a variable only when the user asked for it, or its token left the sequence and the user agreed. A rename must match a token `emails_v2.md` already has.
+- Confirm: the prompts are in `{segment_folder}/prompts.md`, ready to run in the user's personalization tool or any LLM.
+
+### Task 5: Test by hand (after writing)
+
+Gate: the user has sample prospects - rows from their list with the data the prompts read (LinkedIn profile, company page, website text). If not, skip, say so, and stop after writing.
+
+- 3 to 5 sample prospects per round, **max 3 rounds**. Run the prompts yourself on the samples the user gives you, or give the user the steps to run them in any LLM: the supporting context once (the Instructions, Company Context, Rules and Email Sequence in `references/prompt-engineering.md`, filled from `research.md` and `emails_v2.md`), then each prospect's data with each prompt.
+- When the user's stack rewrites outputs, run the rewriting steering on the variables with Rewrite yes, and judge the rewritten line: that is what reaches the prospect.
+- Score each round: Pass when every sample is acceptable, Minor when most are, Major when half or fewer are or a problem is systemic. On Minor or Major, fix the pattern, rewrite `prompts.md` (Task 4), and re-test. After round 3 still failing, keep the best version, warn the user and recommend a manual review.
+- Summarize each round in chat; write no results file.
+
+Criteria, quality thresholds, issue patterns and the round summary: `references/live-test.md`.
 
 ## Data Source Constraints
 
-**CRITICAL**: Prompts may only reference data that a typical personalization run has for each prospect.
+**CRITICAL:** prompts may reference only the data the user's personalization tool gives the AI for each prospect. Ask the user which of these it provides; do not assume.
 
-### Available by default
+| Source | Data available |
+|--------|----------------|
+| LinkedIn profile | Title, company, location, previous roles, education, skills, summary |
+| LinkedIn company | Industry, headcount, headquarters, description |
+| Website content | Company website pages (home by default): products, services, target market, value prop |
+| Website metadata | Site title and description |
+| Technology data | Tech stack - reference only when the user's tool provides it |
+| LinkedIn posts | Recent posts - only when provided; most prospects rarely post, so never rely on it |
 
-- **Company website main page** - products, services, target market, value prop
-- **LinkedIn company page** - industry, headcount, headquarters, description
-- **LinkedIn individual profile** - title, company, location, previous roles, education, skills, summary
+The homepage alone is usually enough website content. Lean on product or services pages only when a prompt discusses the prospect's offerings.
 
-If the user documents extra enrichments for this campaign (for example Crunchbase funding), you may reference those only when they are explicitly available. Do not assume they exist.
+**Safe defaults** (the user does not know what their tool provides): company website main page, LinkedIn company page, LinkedIn individual profile. Continue with these; no hard stop.
 
-### Never Available (unless the user explicitly provides them)
+**Never available**, whatever the campaign: news articles or press releases, funding, recent events or triggers, social media other than LinkedIn, blog content, tech stack (unless the user's tool provides it), anything time-sensitive.
 
-These data sources must never be referenced in prompts by default:
-- News articles or press releases
-- Recent events or triggers
-- Social media posts (except LinkedIn)
-- Blog content or articles
-- Tech stack data
-- Any time-sensitive information
-
-### Variables Are Auto-Injected by the Personalization Tool
-
-- Lead fields like `{firstName}`, `{company}` are usually already in the tool context
-- **DO NOT include variable syntax in your prompts** (no `{variable_name}` references)
-- Just describe what data to use: "Based on their job title..." not "Based on {job_title}..."
-
-When writing prompts, describe what to generate and where to look:
-- Correct: "Based on their job title from LinkedIn..."
-- Wrong: "Based on {job_title} from LinkedIn..."
+**Lead data is injected for you.** First name, company and the other lead fields are already in the AI's context. Never put variable syntax in prompt text; describe the data in words: "Based on their job title from LinkedIn..." not "Based on {title}...". Double-brace tokens belong only in the email sequence; a prompt's **name** is the Title Case form without braces.
 
 ## Prompt Writing Guidelines
 
-Each prompt must specify:
-
-### 1. What to Generate
-Clear instruction on the output:
-- "Write a subject line that..."
-- "Generate a 1-sentence opening that..."
-- "Create a pain point reference that..."
-
-### 2. Tone and Style
-How it should sound:
-- "Conversational and curious"
-- "Professional but friendly"
-- "Insightful, not generic"
-
-### 3. Constraints
-Length and format rules:
-- "Under 50 characters"
-- "1-2 sentences max"
-- "No questions or emojis"
-- "Start with 'PS'"
-
-### 4. Fallback Strategy
-What to do if data is missing:
-- "If not available, use their role instead"
-- "Skip if no relevant data found"
+Each prompt states:
+1. **What to generate** - "Write a subject line that...", "Generate a 1-sentence opening that..."
+2. **Tone and style** - conversational, professional but friendly, insightful not generic
+3. **Constraints** - length, format, no questions or emojis, start with `PS: `
+4. **Fallback** - "If not available, use their role instead" / "Skip if no relevant data"
 
 ## Standard Variable Templates
 
@@ -252,7 +187,7 @@ Aim for a pleasant, genuine tone that reflects the company: smart, concise, pers
 
 ### PS Line
 ```
-Write a PS line for this email that starts with "PS" and continues. Keep it short: one or two sentences. The goal is to be human and to reflect your personality as a creator. This line should be casual and personal - an opportunity to add more humanity to your outreach.
+Write a PS line for this email that starts with "PS: " and continues. Keep it short: one or two sentences. The goal is to be human and to reflect your personality as a creator. This line should be casual and personal - an opportunity to add more humanity to your outreach.
 Make the PS about them, not about you. Include a very small personal detail that few people notice - something hidden on their website or LinkedIn profile. Don't try too hard or make broad assumptions; if you do assume something, mention that you're assuming. Humor is good but subtle - if you see something funny in their profile, you can laugh at it or lightly develop the joke.
 This is also a chance to share a small, catchy idea for them. Keep it genuine and brief. Do not invent connections, invite them to anything, or offer help you can't back up. Avoid generic compliments; instead, make them feel noticed and special.
 ```
@@ -274,238 +209,100 @@ Based on LinkedIn company headcount, reference challenges typical to that size. 
 
 ## Prompt Customization Rules
 
-**CRITICAL RULES** for customizing the standard templates above:
-
-### Examples Policy
-- **DO NOT add examples** for: First Line, PS Line, Subject Line, unless they're heavily customized
-- These types of variables should feel natural and unrestricted - examples constrain creativity
-- **CAN add examples** for: Other custom prompts that need specific structure/format (e.g., industry-specific variables, complex body text)
-
-### PS Line Guidelines
-- **Use the DEFAULT PS line template** and only modify SLIGHTLY for campaign context
-- Never create completely custom PS line prompts from scratch
-- **Format**: Always use "PS: " (with colon and space, NOT "PS -" or "PS." or just "PS")
-- Modifications should be minor adjustments, not rewrites
-
-### Subject Line Guidelines
-- **Keep subject lines close to default formula**, only customize for campaign-specific angle
-- Never add "Quick question" or typical outreach messaging to subject line prompts
-- Subject line prompt changes should be SLIGHT to match email sequence or client tone
-- Avoid sales clichés in subject line instructions
-
-### What You CAN Customize
-- Data source references (which LinkedIn fields to prioritize)
-- Tone adjustments (more casual, more professional)
-- Industry-specific context or pain points
-- Length constraints (shorter or longer)
-
-### What You Should NOT Customize
-- The core structure of First Line, PS Line, or Subject Line templates
-- Adding example outputs that constrain the AI
-- Changing the fundamental approach of these standard variables
+- **Examples:** none in First Line, PS Line or Subject Line unless heavily customized - examples constrain creativity. Other custom prompts may carry examples when they need a specific structure.
+- **PS Line:** start from the default template and change it only slightly; never write a PS prompt from scratch. Format is always `PS: `.
+- **Subject Line:** stay close to the default formula, customize only the campaign angle, never add "Quick question" or outreach clichés.
+- **You may customize:** which LinkedIn or website fields to prioritize, tone, industry context or pain points, length limits.
+- **Do not customize:** the core structure of the First Line, PS Line or Subject Line templates, or the fundamental approach of the standard variables; do not add example outputs that constrain the AI.
 
 ## Rewriting Instructions
 
-When the stack rewrites personalization outputs, it usually already has core principles, style rules, spam/deliverability rules, formatting rules, company context, audience description, and the email sequence. You do NOT need to recreate any of that.
+When the user's stack runs a rewriting pass on the personalized lines, its own rewriting prompt carries the defaults (core principles, email flow, style, spam and deliverability rules, formatting) with the company context, the audience and the email sequence, and your **steering paragraph** goes on top as higher-priority custom instructions. You write only that paragraph.
 
-Your job is to write a short, optional **steering paragraph** (2-10 sentences) that tunes the rewriter for this specific client/segment. Treat it as higher-priority delta instructions on top of generic defaults.
+### Rewrite per user prompt
 
-### The `to_rewrite` field
-`to_rewrite` on each user prompt controls whether its output should be rewritten:
-- `to_rewrite=0` - NOT rewritten (use for subject lines, short outputs)
-- `to_rewrite=1` - WILL be rewritten (use for First Line, PS Line, body content)
+| Rewrite | Typical use |
+|---------|-------------|
+| no | Subject Line and other short keep-as-is outputs (rewriting them is too risky), very simple or formulaic outputs where consistency matters more than variation |
+| yes | First Line, PS Line, body variables |
 
-### What to Write About
+Only user prompts with Rewrite yes go through rewriting.
 
-Pick 1-3 of these angles based on what's distinctive about this client/segment:
-- **Voice & tone** - How should sentences sound? (punchy, technical, warm, dry, founder-to-founder, etc.)
-- **Sentence structure & rhythm** - Short/long, fragments OK, pacing, whether to mirror the client's own writing style
-- **Sequence flow** - How personalized lines should hand off into this segment's specific body copy
-- **Campaign-specific anti-patterns** - Phrases or constructions to avoid for this client (e.g. "don't sound like a recruiter" for an HR-tech client)
-- **Research signaling** - How much the rewrite should show that research was done
+### What to write
 
-### What NOT to Write
+Pick 1-3 angles distinctive to this client or segment: voice and tone (punchy, technical, warm, dry, founder-to-founder); sentence structure and rhythm; how personalized lines hand off into this segment's body copy; campaign-specific anti-patterns ("don't sound like a recruiter"); how much the rewrite should show research.
 
-- Generic rules already in default rewriter guidance (no em-dashes, no spam words, no AI-tells like "I noticed", no exclamation marks, etc.)
-- Formatting instructions the tool already enforces
-- Long explanations or justifications - keep it terse and directive
-- Output examples - they over-constrain the rewriter
+**Do not write:** the injected defaults (em-dashes, spam words, "I noticed", exclamation marks, formatting), long justifications, or output examples.
 
-### Length
+**Length and style:** 2-10 sentences (3-6 is the sweet spot), conversational prose, not bullets. The rewriter picks up the instruction's own tone.
 
-Aim for 2-10 sentences. Usually 3-6 is the sweet spot. The example below is 6 sentences.
-
-### Writing Style
-
-Write it conversationally. The rewriter picks up the tone of the instruction itself, so if you want punchy output, write the instruction in punchy sentences. Avoid bullet lists or numbered rules - prose works better here.
-
-### Example
-
+**Example:**
 ```
 Make it sound as cool as possible. Show you've researched them. Use shorter sentences like I'm doing now. Better to have 2 shorter punchy sentences instead of 1 long boring one. Use power words. Sound human.
 ```
+Six sentences, conversational, covering voice, rhythm and research signaling, with no defaults repeated.
 
-Notice: 6 sentences, conversational, hits voice + sentence structure + research signaling, no rules duplicated from defaults.
+**When to omit:** only when the campaign has no distinctive voice or flow need. In practice most campaigns benefit from 2-3 sentences, so include them by default.
 
-### Source Material
+## Models
 
-Pull voice/tone cues from:
-- `{workspace}/research.md` - Tone preferences, voice guidelines, how the client talks about themselves
-- `{segment_folder}/emails_v2.md` (or `emails.md`) - Style modeled in the sequence itself
-- `{workspace}/notes.md` - Explicit style preferences from the client
+- Write prompts that work on any capable model; never name a model in a prompt.
+- When the user wants to compare models, run the same samples through each in Task 5.
 
-### When to Omit
+## Chat draft shape (for approval)
 
-If the campaign has no distinctive voice/flow requirements, omit the `## Rewriting Instructions` H2 section entirely. Strong defaults are enough. But in practice, nearly every campaign benefits from 2-3 sentences of steering - default to including it.
+Show the draft in the `prompts.md` shape from Task 4, before you write the file.
 
-### How It Gets Used
+## Approval points
 
-The `## Rewriting Instructions` H2 in `prompts.md` is the user-facing steering paragraph to paste into (or load as) the rewrite pass. At runtime the stack typically composes:
-1. Default rewriting prompt (core principles, email flow, style, uniqueness)
-2. Spam and deliverability rules
-3. Company context + audience description
-4. Formatting instructions
-5. Email sequence context
-6. **Your steering paragraph** (higher priority than the default)
+- **Auto-proceed:** minor test fixes (length limits, small wording); a pass on the first round.
+- **Pause for approval:** the first draft before writing; major rewrites (data sources, restructured variables); removing or renaming a variable; a third test round with persistent issues.
 
-## Workflow
+## Quality checklist (before saving)
 
-**See Execution Tasks section at the top of this file.** Follow Tasks 1-4 in order.
+- [ ] Every strategy variable and every live-sequence `{{Title Case}}` token has a prompt; Subject Line included when used
+- [ ] Names Title Case, max 30 chars, unique after snake_case normalization, matching the tokens
+- [ ] No body token reused across emails (one value per lead)
+- [ ] Prompt text max 4096 chars, no `---` line, no lead-variable syntax
+- [ ] Valid data sources only (enrichments or safe defaults)
+- [ ] Clear format and length constraints and a fallback in every prompt
+- [ ] Rewrite plan: no for Subject Line, yes for First Line, PS Line and body variables
+- [ ] Rewriting steering 2-10 sentences, no repeated defaults, or deliberately omitted
+- [ ] No hard-coded model ids
 
-Summary:
-1. Load context (strategy, client docs, notes)
-2. Build user prompts (expand AI variables) + write optional Rewriting Instructions steering paragraph
-3. **Internal text review** of the drafted prompts (unless `--skip-review`)
-4. Output final prompts
+## Edit mode
 
-## Internal Review Process
+When asked to improve existing prompts (`mode: "edit"`, analytics or feedback):
+1. Read `{segment_folder}/prompts.md`.
+2. Scope the change (subject only, first line only, all user prompts, add or remove a variable). Keep unaffected prompts, names and data-source limits intact.
+3. Show a before/after with a one-line rationale and get approval.
+4. Change only the prompts in scope in `prompts.md` and keep the rest, with their Rewrite and Fallback lines. Adding a variable adds an H3, removing one deletes its H3, and a rename must match a token `emails_v2.md` already has.
+5. Optionally re-test (Task 5).
 
-**See Task 3 in Execution Tasks section above.** The internal text review scores and revises the draft before `prompts.md` is written. It does not require a live campaign or platform connection.
+| Cue | Response |
+|-----|----------|
+| "AI feels off" | Tighten constraints and fallbacks |
+| "Too generic" | Name specific LinkedIn or website fields |
+| "Forced connections" | Strengthen the never-assume rules |
+| An underperforming email (analytics) | Check which prompts that email uses and whether personalization helps or hurts there |
 
-Review workflow details are in `review-workflow.md`. Key points:
-- Reviewer checks: variable coverage, data source validity, prompt quality
-- Reviewer does NOT check generic system/context prompts the tool may inject separately
-- Priority order: Client notes > Campaign strategy > Validation rules
-- CRITICAL: Reject prompts referencing invalid data sources (news, funding, events, etc.)
-- Reviewer does NOT check email copy (that's handled by email-copywriting / email-review)
+Weak output usually has one of three causes: the campaign lacks the enrichment a prompt leans on, the prompt is vague, or rewriting is off. Check them in that order before rewriting prompts wholesale.
 
-## User Control Options
+## Errors
 
-| Flag | Effect |
-|------|--------|
-| `--skip-review` | Skip the internal text review and write `prompts.md` from the draft |
-| `--verbose` | Show more detail during review |
-| `--compact` | Minimal confirmation output |
+| Error | Action |
+|-------|--------|
+| Enrichments unreadable or empty | Use the safe default sources; continue |
+| Name or length validation on save | Fix names (Title Case, max 30) or prompt length (max 4096); re-approve if the change is material |
 
 ## Resources
 
-For detailed prompt guidance, see:
+Each one is in `references/`:
 
-- **references/prompt-engineering.md** - Complete guide to AI personalization and prompt writing with JSON examples
-- **review-workflow.md** - Automated internal review process specification
+- `prompt-engineering.md` - prompt anatomy, what the system prompts already say, the variable fields, creative variables, complete example, common mistakes
+- `review-workflow.md` - self-review checklist and priority rules
+- `live-test.md` - hand test runs, criteria, issue patterns, revision loop, other prompts, round summary
 
-## Quality Checklist
+## Confirm
 
-Before outputting, verify:
-- [ ] Every AI variable from strategy.md has a corresponding prompt
-- [ ] All prompts specify valid data sources only
-- [ ] Prompts include clear output format and length constraints
-- [ ] Prompts specify fallback behavior
-- [ ] Variable names match exactly between strategy, `{{Title Case}}` in emails, and prompts.md H3s
-- [ ] Email numbers are specified correctly
-- [ ] Each prompt has correct `to_rewrite` setting (0 for subject lines, 1 for first/PS/body)
-- [ ] `## Rewriting Instructions` section included (2-10 sentences) OR deliberately omitted for a generic-voice campaign
-- [ ] Rewriting instructions don't duplicate generic defaults (em-dashes, spam words, AI-tells, formatting)
-
-## Output Handling
-
-After generating prompts:
-
-1. **Write to segment folder**: Save `prompts.md` to `{segment_folder}/prompts.md`
-2. **Confirm**: Tell the user prompts are saved and ready to run in their personalization tool or LLM for each prospect
-3. **Mode check**: If in approval mode, wait for user approval before proceeding to the next workflow step
-
-## Edit Mode (Improvement Context)
-
-When invoked with improvement context (`mode: "edit"`), this skill edits existing prompts.md rather than generating new prompts.
-
-### Detecting Edit Mode
-
-Check for improvement context in the conversation:
-- `mode: "edit"` indicates edit mode
-- `trigger: "analytics"` or `trigger: "feedback"` indicates source
-- `improvement_instruction` contains specific changes to make
-
-### Edit Mode Workflow
-
-1. **Read improvement context**: Extract `improvement_instruction` object
-2. **Load existing prompts.md**: Read current prompts from campaign folder
-3. **Identify scope**: Which prompts to modify (see scope table below)
-4. **Apply targeted changes**: Only modify specified prompts
-5. **Generate diff**: Show before/after comparison
-6. **Get approval**: Wait for user to confirm changes
-7. **Save**: Update prompts.md with approved changes
-8. **Log**: Update improvement-log.md in plan folder
-
-### Handling Edit Scopes
-
-| Scope | Action | What Changes |
-|-------|--------|--------------|
-| "subject_line prompt" | Modify subject line user prompt only | Single prompt |
-| "first_line prompt" | Modify first line user prompt only | Single prompt |
-| "ps_line prompt" | Modify PS line user prompt only | Single prompt |
-| "system prompts" | N/A - system/context prompts are tool-side, not written here | No action needed |
-| "all user prompts" | Rewrite all output-generating prompts | All user prompts |
-| "add variable" | Add new AI variable prompt | New prompt added |
-| "remove variable" | Remove existing prompt | Prompt removed |
-
-### Edit Mode Output Format
-
-```markdown
-## Proposed Changes to prompts.md
-
-### Subject Line Prompt
-
-**Before:**
-Write a very short subject line that grabs attention in fewer than 6 words...
-
-**After:**
-Write a curiosity-driven subject line under 5 words. Reference their company name or industry. Do not use AI personalization placeholders. Example: "Quick q about [company_name]"...
-
-**Rationale:** Current AI-generated subject lines may be causing fatigue based on Email 3 performance
-
----
-
-Approve these changes? [Yes/No/Modify]
-```
-
-### Preserving Context During Edits
-
-When editing:
-- **Keep unaffected prompts intact**: Only modify prompts in scope
-- **Maintain prompt structure**: Keep Location, Email(s), format
-- **Preserve variable names**: Names must match strategy.md and `{{Title Case}}` in the emails
-- **Keep data source constraints**: Never add invalid sources
-
-### Analytics-Informed Editing
-
-When `analytics_context` is provided:
-- Check which emails use the underperforming prompts
-- Reference `sequence_stats` to identify problem areas
-- Consider if personalization is helping or hurting
-
-### Feedback-Informed Editing
-
-When `feedback_context` is provided:
-- "AI feels off" = Adjust prompt constraints and fallbacks
-- "Too generic" = Add more specific data source references
-- "Forced connections" = Strengthen "don't assume" rules
-
-### Edit Mode Checklist
-
-Before saving edits, verify:
-- [ ] Only specified prompts were modified
-- [ ] Variable names match strategy.md exactly
-- [ ] Data source constraints respected
-- [ ] Prompt structure preserved
-- [ ] Diff shown and approved by user
+> Personalization prompts written to `{segment_folder}/prompts.md`. Rewrite on all non-subject variables. Rewriting steering [written | omitted]. Hand test: [PASS after N rounds | skipped - no samples | PARTIAL - see summary].

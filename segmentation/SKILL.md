@@ -1,156 +1,103 @@
 ---
 name: segmentation
-description: Write AI segmentation prompts that divide prospects into campaign segments. Creates audience description and segment-specific criteria for an AI segmentation step. Use when setting up AI segmentation for a campaign. Triggers on "write segmentation", "segment contacts", or when dispatched by campaign-planning.
-model: sonnet
-thinking: true
+description: Divide a prospect list into campaign segments with AI prompts or hard filters, so each group gets messaging that fits it. Use after qualification when planning a cold-email campaign. Triggers on "segment my list", "split these leads into segments", "write segment descriptions".
 ---
 
 # Segmentation Skill
 
-Write the audience description and segment-specific prompts for AI segmentation. These prompts feed any segmentation step that routes prospects into mutually exclusive audience segments.
+Split a campaign's qualified leads into the plan's segments so each group gets the right messaging. You write the segment descriptions the assigner reads, plus the Default segment's description.
 
-## Output Contract
+You write them to `segmentation.md` in the campaign workspace (`./cold-email/{slug}/`) and create one folder per segment. The user runs the AI segments' descriptions as prompts in any AI tool (a chat, an AI column in Clay or a spreadsheet, one lead at a time) and the manual segments as hard filters in their list tool. Nothing is written to any platform.
 
-`segmentation.md` must follow a fixed structure so downstream campaign tooling can parse it reliably. Hard rules this skill must honor:
+## Inputs
 
-- `## Default Segment` H2 (or legacy `## General Audience`) - its body is the general audience description for the Default / catch-all segment.
-- `## Segments` H2 wraps all audience-segment H3s.
-- Each audience segment is `### Segment N: {Name}` (or `### {Name}`). Authors may write `Segment N:` prefix for organization; tooling strips it before slugifying.
-- The canonical name slug (`re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")`) MUST match the segment folder's slug. Mismatches warn and leave the segment with an empty description.
-- Always create the `0 - default/` folder alongside the numbered segments. Audience segments are `1 - {slug}/`, `2 - {slug}/`, etc.
-- Optional `## Segmentation Mode` H2 selects `ai` (default) or `percentage`. In `percentage` mode each `### Segment N` carries a `- **Weight**: N` line (int 1-100) instead of criteria, and so does `## Default Segment` (the Default is one of the test arms - use it as the baseline/control); weights of ALL arms including the Default must sum to exactly 100, and tooling records a percentage weight per arm. See the Segmentation Modes section below.
+The plan's segments (name, sub-ICP, angle), the qualification audience description, and the applied search filters and qualification criteria (so you repeat neither). Read them from the campaign workspace:
 
-## Required Context
+1. `plan.md` - the segments, their angles and the segmentation mode.
+2. `qualification.md`, when it exists - the audience description to reuse, and the criteria not to repeat.
+3. `search-strategy.md` - the filters already applied. Never restate any of them in a segment.
+4. `research.md` - the client and the ICP.
 
-1. **Read `plan.md`** from the plan folder - Segment definitions and angles
-2. **Read `qualification.md`** from the plan folder (if exists) - Audience description to reuse, criteria to NOT repeat
-3. **Read `search-strategy.md`** from the plan folder - Search filters already applied. Never restate any of these dimensions in segment criteria.
-4. **Read `{workspace}/research.md`** - Client overview, ICP details (`{workspace}` = the client campaign workspace, default `./cold-email/{slug}/` under the current directory)
+When the skill runs on its own, without a workspace, take the same inputs from the user.
 
-## Segmentation Modes
+## Pick the Mode
 
-A campaign is in exactly one mode (set by `## Segmentation Mode`, default `ai`):
+| Mode | In `segmentation.md` | Use when |
+|------|----------------------|----------|
+| Manual | `manual` | The split is a hard filter: industry, seniority, function, geo, company type, email validity. The user's list tool applies it for free. Prefer it. |
+| AI | `ai` (the default) | The split needs judgment from profile or company text (e.g. product company vs services hybrid). One AI call per lead. |
+| A/B arms | `percentage` | A sequence test: random split by weight, no criteria. |
 
-- **`ai` (sub-ICP segmentation)** - the normal mode. Contacts are assigned by AI to the segment whose criteria they match. Each `### Segment N` H3 holds detectable criteria. This is what the rest of this skill describes.
-- **`percentage` (sequence A/B test)** - contacts are distributed **randomly** across the arms by weight, and each arm runs a totally different email sequence (authored in its own folder). Used to test entire sequences against each other. There are **no criteria** - each `### Segment N` carries only a `- **Weight**: N` line, and so does `## Default Segment` - the Default is one of the test arms, used as the baseline/control variant whenever the test has one. The weights of ALL arms - numbered plus the Default - must sum to exactly 100.
+Never mix A/B arms with criteria segments in one campaign.
 
-The two modes are mutually exclusive - never mix percentage arms with AI-criteria segments in one campaign. When dispatched by `campaign-planning`, follow the mode declared in `plan.md`.
+## The Default Segment
 
-## Core Rules
+- Every campaign has a Default segment, and its folder is always `0 - default/` (literal, no variation). Never rename it.
+- Default catches every qualified lead that fits no other segment, plus any lead the assigner is not confident about.
+- Its description is the short general audience description: persona + org type only (e.g. "Financial advisors at independent advisory practices"). No criteria, filters, headcount, geography, value prop, or "doesn't fit the above" wording.
+- Default gets its own sequence like any other segment. Leads that fall through still receive email.
 
-- **Write short, trust the AI** - The segmentation AI is intelligent. Describe each segment in a sentence or two of plain language and let it route. Don't hand it exhaustive title lists or keyword tables - a clear picture of the persona is enough.
-- **Never repeat the search filters** - the search strategy / filters already bound the list (headcount, geography, titles, seniority, industries). Don't restate any of it in the audience description or segment criteria. Segments split the audience by something the filters didn't already pin down - usually persona, role focus, or company type - never by re-stating a filter dimension.
-- **Do NOT repeat qualification criteria** - If qualification.md exists, reuse only its audience description. Don't duplicate any of its dis/qualification criteria.
-- **Segments must be mutually exclusive** - (AI mode) Each contact fits exactly one segment. Keep the line that distinguishes them crisp.
-- **Cover the full audience** - (AI mode) Every qualified contact should land somewhere; the Default segment catches whatever doesn't match a numbered one.
-- **Default segment = the general audience description** - The `## Default Segment` body is NOT catch-all criteria. Write it as the short, general audience description (persona + org type only, no filters). The segmentation AI surfaces it as the campaign's overall audience description, so keep it broad and brief - no headcount, geography, value-prop, or "doesn't fit the above" language.
-- **Skill scope is description + criteria only** - Write the audience description and segment-specific criteria. A surrounding system prompt (if any) is tool-side; do not invent a full prompt template here.
-- **Percentage mode carries no criteria** - In `percentage` mode, skip all criteria. Write only the audience description (still used by qualification) and a `- **Weight**: N` per arm. Assignment is random, so mutual-exclusivity/coverage rules don't apply.
-- **Reasoning should be citable** - (AI mode) Write criteria around concrete, observable signals the model can actually cite (role focus, company type, stage) rather than vague vibes - that makes routing reasons legible and auditable when a tool stores them.
+## Write Segment Descriptions (AI mode)
 
-## Workflow
+- **Write short, trust the AI** - a sentence or two per segment. Describe the persona, not a keyword list.
+- **Self-contained and mutually exclusive** - each description names its own observable signals (role focus, company type, industry cues, stage, size) and never refers to other segments.
+- **Checkable** - write each description around what a LinkedIn profile and basic company data (industry, headcount, HQ, description, website title) show, since that is what the user's AI tool usually gets per lead. Do not lean on news, tech stack, funding, or full site content unless the user's list carries those columns.
+- **Never restate a search filter or a qualification criterion.** Reuse only the audience description.
+- **Cover the audience** - every qualified lead lands somewhere; Default takes the rest. Ask the AI for a one-line reason per lead, so concrete signals keep routing auditable.
 
-### Step 1: Load Context
-- [ ] Read plan.md for segment definitions
-- [ ] Read qualification.md (if exists) for audience description and criteria to avoid repeating
-- [ ] Read client context and research
+## How the User Runs the Assignment (AI mode)
 
-### Step 2: Write Segmentation Prompts
+- One choice question per lead. Each AI segment is an option, with its description as the option text. Default is listed last as the catch-all. Manual segments are not options: their filters run in the list tool first, and only the leads left over go to the AI.
+- The AI also gets the audience description from `qualification.md`, and answers with the segment name, a confidence from 0 to 1 and a one-line reason. Confidence of 0.6 or more keeps the chosen segment; anything lower, or an answer that names no segment, goes to Default.
+- Write that prompt into `segmentation.md` under `## Assignment Prompt`, ready to paste, with `{lead}` where the user puts one lead's profile and company data. Keep it short: the descriptions carry the judgment.
 
-**Audience Description:**
-- Reuse from qualification.md if it exists; otherwise one short sentence.
-- No filter dimensions (headcount, geography, titles, industries).
+## Write the Files
 
-**Segment Criteria:**
-- One short section per segment from plan.md - a sentence or two on who belongs, the persona not a keyword list.
-- Detectable from a LinkedIn profile + company data. Make the distinction crisp, then trust the AI to handle the edges.
+Show the proposed Default description and each segment to the user first. Write nothing until approved. Then:
 
-### Step 3: Write segmentation.md
+1. Write `segmentation.md` at the workspace root, in the shape below.
+2. Create one folder per segment: `0 - default/` always, then `1 - {segment-slug}/`, `2 - {segment-slug}/` and so on, in plan order. The slug is the segment's name in lowercase, with hyphens for spaces and no special characters, and it must match the segment's name in `segmentation.md` and `plan.md`.
+3. Confirm: "Segmentation saved. Created segment folders: [list]".
 
-**AI mode (default):**
+When the skill runs on its own, without a workspace, return `segmentation.md` in the chat instead.
+
+AI mode (the default):
 
 ```markdown
-# Segmentation Prompt
-
-## Audience Description
-[Reuse from qualification.md or write new - short description of target audience]
-
-## Segments
-
-### Segment 1: [Name from plan.md]
-[Criteria for assigning contacts to this segment - what makes them belong here]
-
-### Segment 2: [Name from plan.md]
-[Criteria for this segment]
-
-### Segment 3: [Name from plan.md]
-[Criteria for this segment]
-
-## Default Segment
-[The general audience description: a short, plain statement of who the whole audience is - persona + org type only, e.g. "Financial advisors and wealth managers at independent RIAs and advisory practices". Very short and general: NO criteria, filters, headcount, geography, or "doesn't fit the above" language. The segmentation AI surfaces this as the campaign's general audience description. Maps to the local `0 - default/` folder.]
-```
-
-**Percentage mode (sequence A/B test):**
-
-```markdown
-# Segmentation Prompt
+# Segmentation - {Campaign Name}
 
 ## Segmentation Mode
-percentage
+ai
 
 ## Audience Description
-[Reuse from qualification.md - applies via qualification; same as AI mode]
+[Reused from qualification.md, or one short sentence: persona + org type, no filters]
 
 ## Segments
 
-### Segment 1: [Arm name from plan.md]
-- **Weight**: 33
+### Segment 1: {Name from plan.md}
+[One or two sentences: who belongs here, by signals a profile or company page shows]
 
-### Segment 2: [Arm name from plan.md]
-- **Weight**: 33
+### Segment 2: {Name from plan.md}
+[...]
 
 ## Default Segment
-- **Weight**: 34
+[The short general audience description: persona + org type only. No criteria, filters, headcount, geography, or "doesn't fit the above" wording. Folder: `0 - default/`.]
 
-[The baseline / control arm. Put the control sequence here - the one the other arms are measured against. The Default is a real A/B arm and gets its weighted share of traffic.]
+## Assignment Prompt
+[The ready-to-paste choice question above]
 ```
 
-The Default is **one of your A/B arms** in percentage mode - use it as the baseline / control variant (the one you measure the other arms against). It is always active, so it can't be a weightless catch-all; rather than waste it, give it the control sequence. Like any arm it carries its own `- **Weight**:`, and the weights of ALL arms - numbered **plus** the Default - must be integers summing to exactly 100. (Omit the Default's weight line and tooling can back-fill the remainder `100 - sum(arms)` instead, so you can also list arms summing to ≤99 and let the Default absorb the rest.) Each arm name still has to slugify to its `N - {slug}/` folder. No criteria - the arm's full email sequence lives in its own segment folder.
+**Manual:** write each segment's filters instead of a description, in the same terms as `search-strategy.md` (title, seniority, function, industry, headcount, geography, company type), so the user can apply them in their list tool or as a filter on their spreadsheet. Check that no two segments' filters overlap, and that the leads they leave out land in Default. When **search-strategy** built separate lists for one campaign, re-split them with manual segments; qualification still covers the union of the lists.
 
-### Step 4: Create Segment Folders
+**A/B arms (`percentage`):** each arm, Default included, carries a `- **Weight**: N` line instead of a description, and no Assignment Prompt. All weights, Default included, are integers summing to exactly 100 (Default = `100 - sum(arms)` when not stated). Default is the baseline, or control, arm. Each arm's whole sequence lives in its own folder, and the user splits the list at random by those weights in their list or sending tool.
 
-Always scaffold a `0 - default/` folder in addition to the numbered audience segments. The default folder holds the catch-all / general-audience copy for the Default segment. Its numeric prefix `0` sorts it first and marks it as the default segment folder.
+Report the mode, the Default description, and each segment with its folder.
 
-```
-{plan_folder}/0 - default/
-{plan_folder}/1 - {segment-slug}/
-{plan_folder}/2 - {segment-slug}/
-{plan_folder}/3 - {segment-slug}/
-```
+## Recruiting campaigns
 
-Slug format for audience segments: lowercase, hyphens, no special characters. Derived from segment name. The default folder is always named `0 - default` (literal, no variation).
+For a recruiting campaign, one that fills a role, segments split the candidates by why they would move, not by what they would buy. Take the role from `plan.md`.
 
-## Output Handling
-
-### Workflow mode (plan folder provided):
-1. Write `segmentation.md` to the plan folder root
-2. Create segment subfolders
-3. Confirm: "Segmentation saved. Created segment folders: [list]"
-
-### Standalone mode:
-1. Return the output inline to the user
-
-## Segment Mapping
-
-How `segmentation.md` maps to local folders and routing behavior (tool-neutral):
-
-**AI mode:**
-- Audience description / `## Default Segment` body -> general audience description used for campaign-wide routing context; local folder `0 - default/`.
-- Each numbered `### Segment N` -> matching `N - {slug}/` folder and an AI-criteria segment. Assignment uses the written criteria.
-- Default remains the catch-all when a contact does not match a numbered segment; still write its body as the short general audience description, not "everyone else" criteria.
-
-**Percentage mode (sequence A/B test):**
-- Each numbered arm and the Default are percentage-weight arms. No AI criteria prompts - contacts distribute by weight only.
-- Default is a real arm (baseline/control when you have one), not a weightless catch-all. All arm weights including Default must sum to exactly 100.
-- Audience description still applies via qualification.
-- Mode is fixed for the campaign plan - do not mix AI-criteria segments with percentage arms in one plan.
+- Good angles: the step up (more scope, the next title), the match (they already do this work, with this stack or in this domain), the place (close to the office, or remote when they are not today), the tenure (a long time in their current role), the company stage (from a large company to a smaller one, or the reverse).
+- Each description names what a profile shows, so the AI can assign people: current title, past titles, years in the current role, company size, skills.
+- Never segment on age, gender, race, religion, disability, family status or nationality, or on a guess at any of them.
+- The Default keeps everyone who fits the role but no named angle.

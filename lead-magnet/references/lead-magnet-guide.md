@@ -1,10 +1,10 @@
 # Lead Magnet Reference Guide
 
-Condensed reference from the Lead Magnet Creation PDF, Lead Magnet AI Prompt PDF, and Lead Magnet Ideas PDF. Use this as the primary reference when generating lead magnet concepts.
+Condensed reference on lead magnet creation, idea generation, and tested performance. Use this as the primary reference when generating lead magnet concepts.
 
 ## Full Performance Rankings
 
-All 36 ideas with star ratings, descriptions, and campaign type applicability.
+All 37 ideas with star ratings, descriptions, and campaign type applicability.
 
 | # | Idea | Description | Rating | Click | Reply |
 |---|------|-------------|--------|-------|-------|
@@ -12,7 +12,7 @@ All 36 ideas with star ratings, descriptions, and campaign type applicability.
 | 2 | Mastermind Group & Community | Private group membership access | 5-star | Yes | No |
 | 3 | AI Advisor | For a specific area of improvement | 5-star | Yes | Yes |
 | 4 | "Done For You" Sample | Offer free service sample trial | 5-star | No | Yes |
-| 5 | Lovable App | Free app building trial / single-purpose beautiful tool | 5-star | Yes | No |
+| 5 | Single-Purpose App | A beautiful tool that does one job well | 5-star | Yes | No |
 | 6 | Scorecard | Self assessment evaluation tool | 4-star | Yes | No |
 | 7 | Video Course | Educational video training series | 4-star | Yes | No |
 | 8 | Simulation Environment | Pre-populated demo SaaS apps | 4-star | Yes | No |
@@ -51,7 +51,7 @@ All 36 ideas with star ratings, descriptions, and campaign type applicability.
 ### Software/Tools (Click-Based)
 - **Calculators & Analyzers**: Input data, get personalized output. ROI calculators, benchmark tools, health checks.
 - **Chrome Extensions**: Integrate into existing browser workflow. Best for tools that augment daily tasks.
-- **Lovable Apps**: Single-purpose, beautifully designed tools that solve one workflow perfectly. Examples: ROI Calculator app, Team Health Monitor, Compliance Checker.
+- **Single-Purpose Apps**: Beautifully designed tools that solve one workflow perfectly. Examples: ROI Calculator app, Team Health Monitor, Compliance Checker.
 - **AI Tools**: Leverage AI to provide instant value. Examples: AI Sales Email Writer, Smart Contract Analyzer, Predictive Churn Model.
 
 ### Information (Click-Based)
@@ -170,13 +170,15 @@ All 36 ideas with star ratings, descriptions, and campaign type applicability.
 
 ## Reply-Based Offer Templates
 
+The numbers in these examples are illustrations. A guarantee, trial length or price goes into copy only when the client offers it, in the client's own terms.
+
 ### Done-For-You Sample Template
 **Structure**: "We'll [specific deliverable] for [your company] - completely free. If you like the results, we can discuss [full engagement]."
 **Key elements**:
 - Specific, tangible deliverable (not vague "consultation")
 - Zero commitment language
 - Natural upsell path
-**Example (Ken AI)**: "We'll send personalized emails to 5,000 of your ideal clients and book meetings for you. If you don't get 20+ meetings in 90 days, you don't pay."
+**Example (an outbound agency)**: "We'll send personalized emails to 5,000 of your ideal clients and book meetings for you. If you don't get 20+ meetings in 90 days, you don't pay."
 
 ### Guarantee Structure Template
 **Structure**: "[Specific result] in [timeframe] or [consequence for you, not them]."
@@ -204,9 +206,11 @@ All 36 ideas with star ratings, descriptions, and campaign type applicability.
 
 ## Hook Formulas with Examples
 
+These examples show the shape of each formula. In a real email, every number and claim comes from the client's research or a source you can name: never invent a statistic, a deadline or a result.
+
 ### 1. The Shocking Stat
 - "78% of B2B companies lose $50K+ annually to unqualified leads in their pipeline"
-- "Only 23% of cold emails get opened - the other 77% are wasted budget"
+- "Most outbound teams can't say which of last quarter's replies turned into pipeline"
 - "The average sales team wastes 6 hours/week on manual data entry"
 
 ### 2. The Comparison
@@ -247,7 +251,8 @@ Cold Email -> Landing Page -> Lead Magnet Delivery -> Email Nurture Sequence -> 
 ### Landing Page Best Practices
 - Short and to the point
 - Show the lead magnet in action (video/screenshots)
-- Tools: ClickFunnels, GoHighLevel, Unbounce
+- Build it on the client's own site, or in the landing page tool they already use (Webflow, Unbounce, ClickFunnels, GoHighLevel)
+- Link it from copy only once it is live
 
 ### Email Nurture Sequence (3-7 emails after delivery)
 1. Delivery + Quick Win
@@ -266,3 +271,4 @@ Cold Email -> Landing Page -> Lead Magnet Delivery -> Email Nurture Sequence -> 
 - Reply-based offers need zero friction - no landing pages, no forms, just reply
 - Guarantee-based offers work best when the guarantee is specific and measurable
 - Stack multiple value elements when possible (guarantee + sample + timeline)
+- A concept is not an offer until the client builds it: copy references a lead magnet only when it is live

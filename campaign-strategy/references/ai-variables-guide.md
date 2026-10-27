@@ -7,12 +7,14 @@ Create prompts that generate custom content for each prospect using their websit
 ```json
 [
   {
-    "prompt_name": "descriptive_name",
+    "prompt_name": "Title Case Name",
     "prompt_location": "where it goes in email(s)",
     "prompt_description": "detailed instructions for generating this variable"
   }
 ]
 ```
+
+`prompt_name` is the variable name: Title Case with spaces, 30 characters or fewer, used verbatim as the double-brace token in the copy (e.g. `{{First Line}}`) and as the prompt-writer variable name. When a slot recurs, name each instance uniquely (`PS Line`, `PS Line 2`) so each gets its own prompt.
 
 ## Data Sources (ONLY these available)
 
@@ -39,7 +41,7 @@ Create prompts that generate custom content for each prospect using their websit
 
 **NOT available:**
 - News articles
-- Funding announcements
+- Funding announcements (and a funding round is not a buying event anyway)
 - Recent events or triggers
 - Social media posts
 - Blog content
@@ -52,7 +54,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### Subject Line
 ```json
 {
-  "prompt_name": "personalized_subject_line",
+  "prompt_name": "Subject Line",
   "prompt_location": "subject_line",
   "prompt_description": "Write a very short subject line (3-4 words, max 6). Focus on a single specific detail from their profile or company - their role, industry, product they sell, or market they serve. Make it intriguing without being clickbait. No emojis or ending punctuation. Lowercase except first letter and proper nouns."
 }
@@ -61,7 +63,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### First Line
 ```json
 {
-  "prompt_name": "personalized_first_line",
+  "prompt_name": "First Line",
   "prompt_location": "first_line",
   "prompt_description": "Write the opening line (no greeting). Hook attention with a personalized observation about their role, company, or industry that leads into the email body. Under 20 words. No questions or emojis. Show insight about their situation based on what their company does or who they serve."
 }
@@ -70,7 +72,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### PS Line
 ```json
 {
-  "prompt_name": "ps_line",
+  "prompt_name": "PS Line",
   "prompt_location": "last_line_email_1",
   "prompt_description": "Write a PS line starting with 'PS'. Keep short (1-2 sentences). Be human and casual. Reference a specific detail from their profile - their background, school, location, or something unique about their company. Don't invent connections or offer things you can't deliver."
 }
@@ -81,7 +83,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### Role-Specific Pain
 ```json
 {
-  "prompt_name": "role_pain_point",
+  "prompt_name": "Role Pain Point",
   "prompt_location": "email_2_hook",
   "prompt_description": "Based on job title from LinkedIn, reference a pain point typical to that role. VPs/Directors: scaling, team efficiency, cross-functional alignment. C-suite: strategy, competitive positioning, board concerns. Managers: execution, reporting, resource constraints. Make it specific to their actual title. 1 sentence."
 }
@@ -90,7 +92,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### Product/Service Reference
 ```json
 {
-  "prompt_name": "product_hook",
+  "prompt_name": "Product Hook",
   "prompt_location": "email_1_body",
   "prompt_description": "From company website, identify their main product or service. Reference it specifically to show you understand their business. Example: 'Helping [their target market] with [their product/service] means [relevant challenge].' Use exact product names or service descriptions from their website."
 }
@@ -99,7 +101,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### Target Market Mention
 ```json
 {
-  "prompt_name": "target_market_ref",
+  "prompt_name": "Target Market",
   "prompt_location": "email_2_body",
   "prompt_description": "From website's description of their customers or market, create a reference showing you understand who they serve. Example: 'Selling to [their customer type], you probably deal with [relevant challenge].' Use their actual target market from website. 1 sentence."
 }
@@ -108,7 +110,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### Industry Context
 ```json
 {
-  "prompt_name": "industry_context",
+  "prompt_name": "Industry Context",
   "prompt_location": "email_1_body",
   "prompt_description": "Based on company industry from LinkedIn, reference a common challenge or priority in that industry. Not news or events - general industry dynamics. Example for healthcare: 'In healthcare, compliance and patient data security are always top of mind.' Keep evergreen, not time-sensitive."
 }
@@ -117,7 +119,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### Company Size Context
 ```json
 {
-  "prompt_name": "company_size_ref",
+  "prompt_name": "Company Size",
   "prompt_location": "email_body",
   "prompt_description": "Based on LinkedIn company headcount, reference challenges typical to that size. 10-50: wearing multiple hats, limited resources. 50-200: scaling pains, process gaps. 200-1000: coordination complexity, tool sprawl. 1000+: enterprise complexity, change management. 1 sentence that shows you understand their scale."
 }
@@ -126,7 +128,7 @@ Create prompts that generate custom content for each prospect using their websit
 ### Background Reference
 ```json
 {
-  "prompt_name": "background_hook",
+  "prompt_name": "Background Hook",
   "prompt_location": "ps_line or first_line",
   "prompt_description": "From LinkedIn profile, reference their professional background - previous company, role transition, education, or career path. Example: 'Coming from [previous company/industry], you probably have a different perspective on...' Only use if genuinely relevant. Keep natural."
 }
@@ -167,27 +169,27 @@ Every description must specify:
 ```json
 [
   {
-    "prompt_name": "personalized_subject_line",
+    "prompt_name": "Subject Line",
     "prompt_location": "subject_line",
     "prompt_description": "Write 3-4 word subject line. Reference one specific detail: their job title, the product they sell, their target market, or their industry. Make it feel personal. No punctuation. Lowercase except proper nouns. Examples: 'scaling the sales team', 'enterprise healthcare sales'."
   },
   {
-    "prompt_name": "personalized_first_line",
+    "prompt_name": "First Line",
     "prompt_location": "first_line",
     "prompt_description": "Write opening line connecting their role to the pain point we address. Use their job title and what their company does. Under 15 words. No greeting. Example: 'Running sales at a [company type] means [relevant challenge] is probably constant.'"
   },
   {
-    "prompt_name": "product_context",
+    "prompt_name": "Product Context",
     "prompt_location": "email_1_body",
     "prompt_description": "From company website, identify what they sell and to whom. Write 1 sentence showing you understand their business model. Example: 'Selling [product type] to [customer type] usually means [relevant operational challenge].' Use their actual product/market language."
   },
   {
-    "prompt_name": "role_challenge",
+    "prompt_name": "Role Challenge",
     "prompt_location": "email_2_hook",
     "prompt_description": "Based on their LinkedIn title, reference a challenge typical for that role. Be specific to seniority level. Directors: cross-team coordination, resource allocation. VPs: strategic initiatives, executive reporting. Keep to 1 sentence."
   },
   {
-    "prompt_name": "ps_personal_touch",
+    "prompt_name": "PS Line",
     "prompt_location": "email_1_last_line",
     "prompt_description": "Write PS referencing a detail from LinkedIn: their location, school, previous company, or years in role. Keep genuine and brief. Example: 'PS - Fellow [city] person here' or 'PS - Saw you came from [previous company] - interesting transition.' Start with 'PS'. 1 sentence max."
   }

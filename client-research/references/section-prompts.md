@@ -15,7 +15,7 @@ Detailed guidance for each section of the client research document.
 
 ## Elevator Pitch
 
-A few-second hook the CSM could say out loud to the primary ICP if they bumped into them in an elevator. Goes at the very top of `research.md`.
+A few-second hook you could say out loud to the primary ICP if they bumped into them in an elevator. Goes at the very top of `research.md`.
 
 **Format:**
 ```
