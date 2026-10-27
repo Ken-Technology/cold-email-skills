@@ -30,30 +30,30 @@ _If you actually do this, it will turn your copy from good to great._
 *   Start sentences with "You" more often than "I" or "We"
 *   Use concrete numbers instead of vague terms ("14 days" not "two weeks")
 *   Replace jargon with simple explanations
-*   Write at 8th-grade reading level for maximum comprehension
+*   Write at a 6th-8th grade reading level for maximum comprehension
 *   Use contractions (it's, you'll) to sound more natural
 *   Include specific timeframes ("3 minutes" vs "quickly")
 
 #### Advanced Copy Techniques
 *   **Pattern Interrupts:** Break expectations to maintain attention
 *   **Future Pacing:** Help them visualize success after using your solution
-*   **Micro-Commitments:** Get small yeses before the big ask
+*   **Small Yes:** Make the ask easy to say yes to (a reply, a look at a sample), but still ask for the real offer; a diagnostic question is not a CTA
 *   **Trojan Horse:** Lead with something they want, deliver what they need
 *   **The Damaging Admission:** Admit a small flaw to build trust
-*   **Specificity Sells:** "2,847 companies" beats "thousands of companies"
-*   **Social Proof Stacking:** Layer different types of proof (numbers + names + testimonials)
+*   **Specificity Sells:** "2,847 companies" beats "thousands of companies" - when the number is real
+*   **Social Proof Stacking:** Layer different types of proof (numbers + names + testimonials), all of them real
 
 #### Psychological Triggers
 *   **Loss Aversion:** What they'll miss out on
 *   **Social Proof:** Others are already doing this
 *   **Authority:** Credentials and expertise
 *   **Reciprocity:** Give value first
-*   **Scarcity:** Limited availability or time
+*   **Scarcity:** Only when it is true, with the plain reason ("we take 5 clients a quarter"), never "limited spots"
 *   **Curiosity Gaps:** Tease information they want
 *   **Identity:** Align with who they want to be
 
-#### Power Words
-Use power words to boost conversions. You can ask AI to rewrite your copy using power words.
+#### Plain Words
+Concrete nouns and verbs beat "power words". Hype adjectives fail the review as AI-tells or spam words (`references/sound-human.md`, `references/spam-words.md`).
 
 ### What NOT to Do
 Don't follow templates blindly. Most cold email templates online range from horrible to average - they sound like obvious cold emails and get ignored.
@@ -82,6 +82,8 @@ Don't follow templates blindly. Most cold email templates online range from horr
 *   "I know you're busy, but..."
 *   "Just following up"
 *   Company introductions in first line
+*   Praise or a reaction instead of a fact ("impressive", "caught my attention", "I came across") - see the first-line pairs in `references/qa.md`
+*   "Congrats on the raise": a funding round is not a buying event; write to what the money pays for
 *   Weather, restaurant, school, soccer, or holiday references
 
 **Body Mistakes:**
@@ -100,6 +102,12 @@ Don't follow templates blindly. Most cold email templates online range from horr
 *   High-commitment first asks ("Can we schedule a 1-hour demo?")
 *   Calendar links in first email
 *   Assumptive CTAs ("When can we meet?")
+*   A time commitment in the CTA line: it makes them check their calendar before they say yes. Cut it, or move it to the body.
+    *   Wrong: "Can I show you how the audience layering works? 15 minutes."
+    *   Right: "Can I show you how the audience layering works?" or, in the body, "I can walk you through it in about 30 minutes. Worth a call?"
+*   Keyword-trigger CTAs read as spam:
+    *   Wrong: `Reply "ICP" and I'll map out how we'd approach yours.`
+    *   Right: `Curious how we'd approach your ICP? Just reply and I'll map it out.`
 
 **Tone Mistakes:**
 *   Being too formal/corporate
@@ -107,6 +115,7 @@ Don't follow templates blindly. Most cold email templates online range from horr
 *   ALL CAPS for emphasis
 *   Too many emojis
 *   Desperate language ("Please, please reply")
+*   Guilt-trip closers: a final email that opens with "Last email", "Last one" or "This is my last email to you". Start it with its actual content.
 *   Arrogant or condescending tone
 *   Being too casual/unprofessional
 
@@ -117,7 +126,7 @@ Don't follow templates blindly. Most cold email templates online range from horr
 *   Images that don't load
 *   Signatures longer than email body
 *   Colored text or fancy fonts
-*   Email longer than 150 words (first touch)
+*   A static body over its word band (Email 1 over 80 words, a follow-up over 60)
 
 **Strategic Mistakes:**
 *   Sending to generic emails (info@, support@)
@@ -125,3 +134,4 @@ Don't follow templates blindly. Most cold email templates online range from horr
 *   No follow-up sequence planned
 *   Same message to different ICPs
 *   Pitching competitors' clients with same message
+*   Blaming the copy for a reply drop before checking how replies were classified

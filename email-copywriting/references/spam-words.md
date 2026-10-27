@@ -1,6 +1,6 @@
 # Spam Words & Deliverability Content Rules
 
-Compiled 2026-07 from 25+ deliverability sources (Google/Microsoft official sender docs, Spamhaus, Al Iverson/Spam Resource, Hunter's 31M-email dataset, Mailmodo/HubSpot/ActiveCampaign/Smartlead/Instantly/Mailreach/Folderly/Woodpecker word lists). This file is the single source of truth for spam-word policy across email-copywriting and email-review.
+Compiled 2026-07 from 25+ deliverability sources (Google and Microsoft sender guidelines, Spamhaus, Al Iverson's Spam Resource, a 31M-email reply study, and the published spam-word lists of a dozen email and deliverability tools). This file is the single source of truth for spam-word policy across the **email-copywriting** and **email-review** skills.
 
 ## How to think about this (the reality)
 
@@ -54,7 +54,7 @@ Notes:
 - `$`, `%`, numbers, or emoji in subject lines (one emoji in body max, only on a warmed domain)
 - More than 1 link in a first touch (2 absolute max in any email); anchor text must say where the link goes; never URL shorteners (bit.ly etc. carry shared blocklist reputation)
 - Image-heavy HTML, attachments on first touch, hidden text (explicit Google flag)
-- Designed-looking emails: plain text structure always - heavy HTML bounces ~6.5x more (Hunter, 2.2M emails)
+- Designed-looking emails: plain text structure always - heavy HTML bounces ~6.5x more (a 2.2M-email study)
 - Formal unsubscribe LINKS in cold email add newsletter-classification signals - use the plain-text opt-out line instead ("If this isn't relevant, just reply and I'll stop emailing")
 
 ## Safe alternatives (the reach-for list)

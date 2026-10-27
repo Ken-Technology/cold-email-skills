@@ -1,6 +1,6 @@
 # Sound Human: AI-Tells & ICP Voice Matching
 
-Compiled 2026-07 from corpus studies (post-ChatGPT word-frequency research), the Wikipedia "Signs of AI writing" catalog, and cold-email practitioners (Lavender data, Josh Braun, Kyle Coleman, Becc Holland, 30MPC, Hunter). This file is the single source of truth for the human-voice standard across email-copywriting and email-review.
+Compiled 2026-07 from corpus studies (post-ChatGPT word-frequency research), the Wikipedia "Signs of AI writing" catalog, cold-email reply-rate studies, and practitioners (Josh Braun, Kyle Coleman, Becc Holland). This file is the single source of truth for the human-voice standard across the **email-copywriting** and **email-review** skills.
 
 The dividing line: **recipients don't care whether you used AI; they care if it reads like AI.** An email reads human when it demonstrates non-fakeable relevance to one specific person and sounds like something a real person would type. Polish itself is the tell.
 
@@ -8,7 +8,7 @@ The dividing line: **recipients don't care whether you used AI; they care if it 
 
 AI personalization renders every email as a genuinely individual message - this person's name, their company, their situation. Write from that reality: you are ONE human typing a short note to ONE other human, because you found something that helps them specifically.
 
-The posture is **doing them a favor, not asking for one.** You're usually handing them something - a free deliverable, a fix for a problem they visibly have, information they'd want anyway. Write like the person who shows up with the thing, not the person who wants a slice of their time.
+The posture is **doing them a favor, not asking for one.** You're usually handing them something - a deliverable on you, a fix for a problem they visibly have, information they'd want anyway. Write like the person who shows up with the thing, not the person who wants a slice of their time.
 
 A marketing email talks about the sender: features, "we do X", what the platform offers. A one-on-one note talks about the reader: their situation, the thing they're getting, what happens next. Tests while drafting:
 
@@ -45,6 +45,8 @@ Hard limits:
 
 **Cold-email dead phrases (instant delete for prospects):**
 - "I hope this email finds you well"
+- "I wanted to..." / "I wanted to share..." / "I was reaching out..." (sentence-start autobiography)
+- "I think..." as a sentence start (replace with an observation about them)
 - "I came across your profile / your company"
 - "I couldn't help but notice"
 - "I noticed you recently posted about X on LinkedIn" (generic-personalization formula)
@@ -53,6 +55,7 @@ Hard limits:
 - "Congratulations on your recent funding" (as an opener formula)
 - "As a [title], you know..." (mirroring their title back)
 - "In today's fast-paced world / competitive landscape"
+- "Let's dive in" (and anything that starts that way)
 - "Warm regards" · "Dear [anything]"
 - "quick question" (subject or opener)
 
@@ -75,10 +78,10 @@ Hard limits:
 - **Write how the PROSPECT talks, not how you talk** (Josh Braun). Mine their reviews, case studies, job posts, forum threads for literal vocabulary and paste their words into the email. See the ICP Voice Card below.
 - **Specificity that couldn't be faked.** "You opened three SRE roles in Austin last week, all requiring Kubernetes" beats any adjective. Real numbers, named customers, concrete scenes ("researching earnings at 2am") - only true ones.
 - **Jagged rhythm on purpose.** Mix a 3-word fragment with a longer sentence. Fragments are fine: "Worth a toast?"
-- **Contractions and casual connectors:** it's, you'll, btw, honestly, "also -". Slightly casual tone measurably lifts replies (Lavender: +23%).
+- **Contractions and casual connectors:** it's, you'll, btw, honestly, "also -". Slightly casual tone measurably lifts replies (about +23% in reply studies).
 - **Plain verbs, first person:** "we built", "I noticed", "I created a newsletter that..." - not "we've developed a solution designed to".
 - **One flourish of personality per email, max.** A joke, a physical object, an honest admission ("I'm not sure if this is a fit"). One beat, not a routine.
-- **3rd-5th grade reading level** (Lavender: 67% more replies). Short words, short sentences, zero jargon the ICP doesn't use daily.
+- **3rd-5th grade reading level** (about 67% more replies in reply studies). Short words, short sentences, zero jargon the ICP doesn't use daily.
 - **The read-aloud test:** if you would never say the phrase to the prospect's face, delete it. Machines still lose this test.
 - **Humility beats swagger:** "Not sure if you're the right person for this" reads human; "best-in-class platform" reads like a bot.
 
@@ -97,7 +100,7 @@ Proof that lands: {which kind of evidence this ICP believes - benchmarks, peer n
 ```
 
 Rules:
-- The card derives from the client research and the segment definition - not from imagination. If the client has a founder voice profile in notes/memory, it overrides the generic sender persona.
-- Copy the finished card into the `## Notes` section at the end of `emails.md` so the review pass can check the copy against it.
+- The card derives from the client's company context and research, the campaign strategy, and the segment definition - not from imagination. If the client has a founder voice profile in the client notes, it overrides the generic sender persona.
+- Keep the finished card with the copy so **email-review** can check the copy against it: it goes under `### ICP Voice Card` in the `## Notes` section at the end of the segment's `emails.md`, and **email-review** carries it into `emails_v2.md`.
 - The same offer gets re-voiced per segment: an engineer gets "your CI bill" while a CFO gets "your build-infrastructure spend". If two segments' emails differ only by industry noun swap, the voice card wasn't used.
 - Insider terms are allowed to exceed the reading-level rule when 80%+ of the ICP uses them daily (a Bazel engineer expects "remote cache hits"; simplifying it down marks you as an outsider).

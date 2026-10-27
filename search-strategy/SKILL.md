@@ -5,68 +5,59 @@ description: Turn an ICP into portable prospect-search filters you can run in Ap
 
 # Search Strategy Skill
 
-## Purpose
-
-Turn an ideal customer profile into **portable prospect-search filters** the user can run in any list tool (Apollo, Sales Navigator, Clay, ZoomInfo, LinkedIn, or a hand-built list). Do not bind the work to a single vendor. Write the result to `search-strategy.md` so the rest of the campaign workflow has a clear, reusable targeting brief.
+Turn an ideal customer profile into portable prospect-search filters the user can run in any list tool (Apollo, Sales Navigator, Clay, ZoomInfo, LinkedIn, or a hand-built list), check that the volume fits the campaign, and write the result to `search-strategy.md` so the rest of the campaign has a clear, reusable targeting brief. Do not bind the work to one vendor.
 
 ## Inputs
 
-1. **Read `research.md`** from the campaign workspace when it exists. Pull ICP details, buyer roles, company attributes, competitors, and any named example prospects.
-2. **Read the offer / ICP** from `plan.md` or the user's brief when present (who you sell to, what you sell, and the problem the offer solves).
-3. **If either is missing**, ask the user for:
-   - Target role (title or function + seniority)
-   - Company type (industry, size, and business model)
-   - The problem the offer solves (used to choose intent signals and exclusions)
+1. **Read `research.md`** from the campaign workspace (`./cold-email/{slug}/`) when it exists: ICP details, buyer roles, company attributes, competitors, named target accounts and example prospects.
+2. **Read `plan.md`** for the broad ICP, the segments and the lead target, or the user's brief when there is no plan.
+3. **If either is missing**, ask the user for the target role (title, or function plus seniority), the company type (industry, size, business model) and the problem the offer solves. Never invent an ICP: a short question beats a guess.
 
-Do not invent an ICP. Prefer short clarifying questions over guessing.
+## Core Principles
 
-## Define filters
+- **Breadth over perfection** - Capture the full addressable market. AI qualification handles edge cases.
+- **Size to the target** - When the user or the calling agent sets a lead target and a count range, tune to that range. Otherwise aim for 3x-10x the desired contacts: about 5x covers enrichment (~30% email found), verification (~70% valid), and qualification (~60% pass).
+- **Function + seniority over long title lists** for broad roles. Use the tool's seniority filter (Director, VP, C-level) instead of listing every senior title.
+- **Keywords last** - Profile keywords shrink a search fast. Use one only when titles and functions cannot find the role, and let qualification judge the rest.
+- **Geography as the offer is sold** - Person location, company HQ or both, depending on how the offer is sold. Check that the user's list tool covers the region before you build on it.
+- **Full-phrase title matching** - A title matches the whole phrase, not single words. Expand every role into 8-15 real variants (`"VP Marketing"`, `"VP of Marketing"`, `"Vice President Marketing"`, `"Head of Marketing"`, `"Director of Marketing"`); unexpanded lists silently miss people.
+- **Capture exclusions** - Competitors, current customers, agencies when selling to product companies, and other bad fits, so the user never spends exports on them.
 
-Work through every category below. For each, pick concrete values tied to the ICP and keep 1-2 examples in mind as calibration. Use a checklist and fill only the categories that apply; leave a category blank rather than force a weak filter.
+## Define Filters
 
-- [ ] **Job titles and seniority**
-  - Prefer a short primary title list plus seniority when the role is clear.
-  - Examples: `VP Marketing`, `Head of Growth`; seniority `Director`, `VP`, `C-level`.
-- [ ] **Departments / functions**
-  - Use function when titles vary a lot across companies.
-  - Examples: `Marketing`, `Revenue Operations`, `Engineering`.
-- [ ] **Industries / verticals**
-  - Name the verticals that actually buy; avoid overly broad buckets unless volume is too low.
-  - Examples: `B2B SaaS`, `healthcare software`, `commercial real estate`.
-- [ ] **Company size (headcount bands) and revenue bands**
-  - Pick headcount and/or revenue ranges that match buying power and sales motion.
-  - Examples: headcount `51-200`, `201-500`; revenue `$10M-$50M`.
-- [ ] **Geography**
-  - Person location and/or company HQ, depending on how the offer is sold.
-  - Examples: `United States`, `United Kingdom`, `DACH`, `remote-US only`.
-- [ ] **Technographics (tools they use)**
-  - Include stack signals only when they change fit or the pitch.
-  - Examples: uses `Salesforce`, uses `HubSpot`, runs on `AWS`.
-- [ ] **Intent / timing signals**
-  - Hire, funding, launches, expansion, and similar triggers that make outreach timely.
-  - Examples: hiring for `SDRs`, raised Series A/B in last 12 months, opened a new market.
-- [ ] **Keywords (positive)**
-  - Phrase or profile keywords that pull the right people in when title alone is weak.
-  - Examples: `"demand gen"`, `"plg"`, `"outbound"`.
-- [ ] **Exclusions (negative filters)**
-  - Competitors, current customers, agencies-as-end-customers, wrong business models, and other bad-fit segments.
-  - Examples: exclude competitor brands; exclude `consulting` / `agency` when selling to product companies; exclude companies already on the customer list.
+Work through every category below. Pick concrete values tied to the ICP, with one or two real example prospects in mind as calibration. Fill only the categories that apply; leave one blank rather than force a weak filter.
 
-**Rules of thumb:**
-- Breadth over perfection. Downstream qualification and list cleaning handle edge cases.
-- Prefer function + seniority over a huge title laundry list when titles are noisy.
-- Do not stack every filter at once. If volume will be thin, drop the weakest constraint first.
-- Always capture exclusions so the user does not waste exports on known bad fit.
+- [ ] **Job titles and seniority** - a short primary title list, expanded into its real variants, plus seniority when the role is clear (`VP Marketing`, `Head of Growth`; `Director`, `VP`, `C-level`).
+- [ ] **Departments / functions** - when titles vary a lot across companies (`Marketing`, `Revenue Operations`, `Engineering`).
+- [ ] **Industries / verticals** - the verticals that actually buy. LinkedIn-based tools use LinkedIn's industry names (`software development`, `financial services`), so write those.
+- [ ] **Company size and revenue** - headcount and revenue bands that match buying power and the sales motion (`51-200`, `201-500`; `$10M-$50M`).
+- [ ] **Geography** - person location, company HQ or both (`United States`, `United Kingdom`, `DACH`).
+- [ ] **Technographics** - only when the stack changes fit or the pitch (uses `Salesforce`, uses `HubSpot`).
+- [ ] **Intent and timing signals** - hiring, funding, launches, expansion (hiring `SDRs`, raised a Series A in the last 12 months).
+- [ ] **Keywords** - only when titles and functions cannot find the role.
+- [ ] **Exclusions** - competitors, current customers, agencies when selling to product companies, wrong business models.
+
+Don't combine titles AND seniority AND function unless the ICP truly needs all three. When volume will be thin, drop the weakest constraint first.
+
+## Workflow
+
+1. **Target** - segments x contacts per segment = desired contacts (default ~1,000-2,000 per segment unless the plan or the user sets a target).
+2. **People-first or account-first** - Default is people-first (role + company attributes). Account-first when research names target accounts or the plan says ABM: list the accounts, then find the people at them in the user's tool (a Sales Navigator account list, an Apollo company list).
+3. **Expand** - Write out the real variants of every title and industry and merge them into the lists.
+4. **Build** the filters, one category at a time (Define Filters above).
+5. **Spread** - When the user's tool shows a breakdown by industry, seniority or size, read it. If one bucket holds over 60% of results, the other dimensions are probably too narrow: loosen them.
+6. **Count** - Estimate the market (role rarity x industries x geography x size band), or have the user run the filters in their tool and read its total (Apollo total results, the Sales Navigator lead count). Too few: broaden titles, add industries, widen geography, drop a seniority constraint. Too many: narrow titles or geography, add seniority or company size. Up to 3 retunes, then go with the best and note the gap. When the count stays uncertain, say so in the file and have the user check it in their tool before they enrich or buy credits.
+7. **Sanity check (optional)** - Check that 1-2 example prospects from the research would pass every filter.
+
+The goal is a list large enough to run the campaign after bounce, missing-email and qualification losses, not a perfect single-pass filter.
 
 ## Output: write `search-strategy.md`
 
-Write `search-strategy.md` to the campaign workspace (plan folder root when running inside a campaign workflow). The file **must** contain all three of the following.
+Write `search-strategy.md` to the campaign workspace (`./cold-email/{slug}/`). It holds the four parts below. Qualification and segmentation read it, so they never restate the filters.
 
 ### 1. Filters table
 
-A markdown table with columns **`Category | Value | Why`**. One row per filled category from the checklist above. `Why` is a short plain-language reason tied to the ICP or offer (not a restatement of the value).
-
-Example shape:
+A markdown table with the columns `Category | Value | Why`, one row per filled category. `Why` is a short plain reason tied to the ICP or the offer, not the value again.
 
 ```markdown
 # Search Strategy
@@ -76,17 +67,19 @@ Example shape:
 | Category | Value | Why |
 |---|---|---|
 | Job titles and seniority | VP Marketing, Head of Growth; Director+ | Owns pipeline and budget for outbound tools |
-| Industries / verticals | B2B SaaS | Offer is built for product-led B2B teams |
-| Company size | 51-500 employees | Enough volume to need outbound; still founder/VP-accessible |
-| Geography | United States, United Kingdom | Supported selling regions |
+| Industries / verticals | software development | Offer is built for product-led B2B teams |
+| Company size | 51-500 employees | Enough volume to need outbound; still reachable at VP level |
+| Geography | United States, United Kingdom | Where the offer is sold |
 | Exclusions | Agencies, current customers, named competitors | Wrong buyer or already covered |
 ```
 
-### 2. Per-tool notes
+### 2. Volume
 
-A subsection that maps the key filters to **Apollo** and **Sales Navigator** field names so the user can execute without rethinking the ICP. Keep it practical, not exhaustive. Cover at least titles/seniority, industry, company size, geography, and exclusions when those are set.
+The desired contacts, the estimated or counted total, the ratio between them, and every retune you made. Say plainly when the total is an estimate.
 
-Suggested structure:
+### 3. Per-tool notes
+
+Map the key filters to the user's tool so they can run them without rethinking the ICP. Cover at least titles and seniority, industry, size, geography and exclusions when they are set.
 
 ```markdown
 ## Per-tool notes
@@ -110,21 +103,11 @@ Suggested structure:
 - Exclusions -> Boolean NOT on title/keyword; exclude account lists
 ```
 
-Add a short note when the user's preferred tool is Clay, ZoomInfo, or another provider: translate the same categories into that tool's closest fields rather than inventing a second ICP.
+For Clay, ZoomInfo or another tool, translate the same categories into its closest fields instead of writing a second ICP.
 
-### 3. Bring your own list (CSV)
+### 4. Bring your own list (CSV)
 
-A subsection that defines the CSV shape for a list the user already has or will export from any tool.
-
-**Required columns:**
-
-`full_name`, `first_name`, `company`, `title`, `email`, `linkedin_url`, `company_domain`
-
-**Optional columns:**
-
-`phone`, `city`, `country`
-
-Include a one-line reminder: one contact per row, UTF-8 CSV, header row required, and leave optional fields empty rather than omitting the column when the user's tool can export them.
+The CSV shape for a list the user already has or exports from any tool:
 
 ```markdown
 ## Bring your own list (CSV)
@@ -135,17 +118,25 @@ Optional columns: phone, city, country
 One contact per row. UTF-8 CSV with a header row. Prefer empty optional cells over dropping columns.
 ```
 
-## Sanity-check volume
+Account-first: also list the target accounts (name and domain) in their own table. Multi-list: one filters table per list, headed `## Filters - {list name}`. Then tell the user the filter summary, the count-to-target ratio and where the file is.
 
-Estimate whether the filters will yield roughly the desired contact count before the user runs a full export.
+## Multi-list Campaigns
 
-1. Ask (or read from the plan) how many contacts they want for the campaign or per segment. Default to ~1,000-2,000 per segment if unspecified.
-2. Mentally size the market: role rarity x industry count x geo x company-size band. Use any quick count the user's tool exposes (Apollo total results, Sales Nav lead count, and similar).
-3. **Too broad** (orders of magnitude above need): tighten titles or seniority, narrow geo, add company size, or add one strong exclusion. Note the change in `search-strategy.md`.
-4. **Too narrow** (well below need): broaden titles (add function + seniority), add adjacent industries, expand geo, or drop a weak technographic/intent constraint. Note the change.
-5. If volume is still uncertain, say so explicitly in the file and recommend the user check the count in their tool before enriching or buying credits.
+When the plan mixes distinct ICPs (e.g. SaaS founders + agency founders), write one filters table per list in `search-strategy.md` instead of one OR'd mega-search. Each list is pulled on its own with its own size, split half/half by default or by the user's weights. Keep the lists apart from the start: one mixed export is hard to split cleanly later.
 
-The goal is a list large enough to run the campaign after bounce, missing-email, and qualification losses, not a perfect single-pass filter.
+## Recruiting campaigns
+
+For a recruiting campaign, search for people who could take the role. Take the title, the must-haves, the location and the remote policy from the role description.
+
+- Titles: the role's title and its close variants as current titles; add past titles for people who did the job before and moved up or sideways.
+- Experience: years of experience from the must-haves (at least 5 for "5+ years"). Time in the current role favours people ready to move. A recent promotion or job change usually means someone just settled in, so filter on it only when the role asks for it.
+- Skills and education: skills for the must-have tools and languages; schools, degrees and fields of study only when the role requires them.
+- Place: a place the user names ("in the US"), else the role's location, as person location, never company HQ. A remote role uses country only. Never narrow a place the user named to fit a candidate count.
+- Employer: an industry the user names goes in the industry filter. LinkedIn industries have no AI or developer-tools industry, so for "AI startups" or "developer-tool companies" keep the closest industry (software development) and put the words in profile keywords ("AI devtools"). This is the one case for keywords here: they match the headline, summary and title, so they find people who sell or build that kind of product. "Startup" is a headcount (up to 200). Say once that the employer type is matched on profile words, not a company label.
+- Exclude the hiring company, so the campaign never reaches its own staff. A past-company filter finds alumni of companies whose people fit.
+- Never filter on age, gender, race, religion, disability, family status or nationality, or on a stand-in for one (a graduation year for age).
+
+Validate and count as for any search. A candidate audience is smaller than a buyer one: a few hundred to 2,000 people for one role is normal.
 
 ## Upgrade
 

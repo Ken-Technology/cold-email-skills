@@ -2,19 +2,17 @@
 
 ## Purpose
 
-Write structured qualification variables that a qualification AI (or any LLM-based qualification step) uses to evaluate individual prospects. Three structured fields build the prompt automatically.
+Write the structured variables an AI qualifier (any LLM-based qualification step) uses to judge each prospect. Three fields build the prompt; they are the three H2 sections of `qualification.md`.
 
 ## Structured Fields
 
-These structured fields are used for Qualification:
-
 | Field | Required | Purpose |
 |-------|----------|---------|
-| `audience_description` | Yes | Who the target audience is - short description |
-| `disqualification_criteria` | Yes (preferred) | Conditions that DISQUALIFY a prospect |
-| `qualification_criteria` | Optional | Conditions that QUALIFY a prospect |
+| Audience description | Yes | Who the target audience is, in one short sentence |
+| Disqualification criteria | Yes (preferred) | Conditions that DISQUALIFY a prospect |
+| Qualification criteria | Optional | Conditions that QUALIFY a prospect |
 
-At least 2 of 3 fields must be provided. Strong preference for `audience_description` + `disqualification_criteria` only.
+At least 2 of 3 fields must be filled. Strong preference for audience description + disqualification criteria only.
 
 ## Key Principles
 
@@ -25,7 +23,7 @@ At least 2 of 3 fields must be provided. Strong preference for `audience_descrip
 
 ### Never Repeat Search Filters
 - `search-strategy.md` already bounds the list. Whatever dimension it sets - headcount, geography, title, seniority, industry - the prompt says NOTHING about it
-- Example: if the filter sets company headcount to 2,000-50,000, do not mention employee count anywhere in the prompt. If the filter sets geography to US/Canada, don't name a country. The list is already that.
+- Example: if the filters set company headcount to 2,000-50,000, do not mention employee count anywhere in the prompt. If the filters set geography to US/Canada, don't name a country. The list is already that.
 - Restating a filter wastes the AI's attention and can fight the filter. Qualification only catches what the filters CAN'T see:
   - B2B vs B2C business model
   - Product vs services/consulting company
@@ -51,7 +49,7 @@ The qualification AI has access to:
 NOT available:
 - Full website content, product pages, tech stack
 - News articles, press releases, funding data
-- Social media activity
+- Social media activity, events, or any time-sensitive signal
 
 ## Common Disqualification Criteria
 

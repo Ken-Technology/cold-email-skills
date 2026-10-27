@@ -1,6 +1,6 @@
 # Research Summary Template
 
-Use this structure for the summary section at the top of `{workspace}/research.md`.
+Use this structure for the summary section at the top of the workspace file `research.md`.
 
 ---
 
@@ -9,9 +9,8 @@ Use this structure for the summary section at the top of `{workspace}/research.m
 
 > Client context file - Open this file when working on this client's campaigns
 
-**Slug**: {slug}
 **Created**: {date}
-**CSM**: {csm_name}
+**Owner**: {owner_name}
 
 ---
 
@@ -76,16 +75,14 @@ Use this structure for the summary section at the top of `{workspace}/research.m
 ## Quick Links
 
 - **Website**: {company_website_url}
-- **CRM / project tracker**: {crm_or_tracker_link or "Not configured"}
-- **Campaign platform**: {campaign_platform_link or "Not configured"}
-- **Other**: {other_relevant_client_links or "Not configured"}
+- **Other links**: {LinkedIn page, docs, decks, or other client links, or "None"}
 ```
 
 ---
 
 ## Guidelines
 
-1. **Preserve existing metadata**: If research.md already exists, keep the slug, created date, and owner from the original file.
+1. **Preserve existing metadata**: If research.md already exists, keep the created date and owner from the original file.
 
 2. **Be specific, not generic**: Avoid buzzwords like "innovative" or "cutting-edge". Use concrete descriptions of what the company does.
 

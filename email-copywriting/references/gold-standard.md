@@ -1,6 +1,12 @@
 # The Gold Standard - What 9-10/10 Copy Looks Like
 
-Two operator-written campaigns (Cristian, Ken AI campaigns 431 and 2157) are the quality bar for every sequence this skill produces. Study them before drafting. The default AI draft is a 6-7/10; the difference between that and these is not talent, it is a set of concrete habits listed below.
+Two operator-written campaigns (campaigns 431 and 2157) are the quality bar for every sequence **email-copywriting** produces. Study them before drafting. The default AI draft is a 6-7/10; the difference between that and these is not talent, it is a set of concrete habits listed below.
+
+The copy is reproduced as sent, with three updates so it matches today's rules: signatures use the sender variables (the originals hard-coded the sender name), the final PS variable uses the standard name `{{Final PS Line}}`, and Exemplar 2's sign-up link sits on plain words instead of a bare URL (its company name is plain because that CTA link is the email's one link).
+
+The exemplars sign with the two-line sender-name block. In your own copy a single `{sender_signature}` line takes its place (the Signature rule in **email-copywriting**); the block is the alternative when the sending tool has no signature variable.
+
+**Learn the habits, not the letter.** These emails predate the spam-word budget, the PS rules and the link rules. Do not copy their "free trials" or "guarantee included" wording (spam tiers), the PS on every email (the default is Email 1 and the last email, formatted `PS: `), or the shortest close without a PS (about 33 static words: count the whole body, greeting through signature, against the lint's 40-word floor). The word bands today: Email 1 50-80 static words, follow-ups 30-60, one value-stack email up to ~100.
 
 ## Exemplar 1: "Free Trial" offer sequence (campaign 431)
 
@@ -20,8 +26,7 @@ If we do hit it, I'm sending a mini pinata and party supplies. You can even send
 Want to try it?
 
 Best,
-Cristian Frunze
-Founder of [Ken AI](https://ken.so)
+{sender_first_name} {sender_last_name} - Founder at [Ken AI](https://ken.so)
 
 {{PS Line}}
 ```
@@ -44,8 +49,7 @@ That's $1,850 in value, on us. And if we don't land you at least 5 positive repl
 Worth a toast?
 
 Best,
-Cristian Frunze
-Founder of [Ken AI](https://ken.so)
+{sender_first_name} {sender_last_name} - Founder at [Ken AI](https://ken.so)
 
 PS - Ryan Allis, who had a 169M SaaS exit from his email marketing company, now uses us. We helped his new company SaasRise go from 1.5M to 4.5M ARR in 12 months.
 ```
@@ -60,10 +64,9 @@ I really believe we can help {company} get in front of the right people. Otherwi
 If this isn't relevant, just reply and I'll stop emailing.
 
 Best,
-Cristian Frunze
-Founder of [Ken AI](https://ken.so)
+{sender_first_name} {sender_last_name} - Founder at [Ken AI](https://ken.so)
 
-{{PS Line Final}}
+{{Final PS Line}}
 ```
 
 ```
@@ -76,15 +79,14 @@ We only run a few free trials each month since each one takes real time from our
 If you want one of the spots, just reply.
 
 Best,
-Cristian Frunze
-Founder of [Ken AI](https://ken.so)
+{sender_first_name} {sender_last_name} - Founder at [Ken AI](https://ken.so)
 
-{{PS Line Final}}
+{{Final PS Line}}
 ```
 
 The A/B/C/D test on this campaign varied the **guarantee metric itself** (5 positive replies vs 10 vs 50 replies vs 100 clicks) - an offer-level test, not a wording test.
 
-## Exemplar 2: One-sentence product pitch (campaign 2157, "Ken Daily")
+## Exemplar 2: One-sentence product pitch (campaign 2157, daily-leads newsletter)
 
 **Entire email (static body ~41 words):**
 
@@ -96,10 +98,10 @@ Hey {firstName},
 I created a newsletter that emails you 10 qualified leads that match your ICP every morning, and it also includes a personalized email you can send to them.
 
 You don't need to pay anything, just sign up if you want it:
-https://ken.so/daily
+[Sign up here](https://ken.so/daily)
 
 Best,
-{sender_first_name} - Ken AI
+{sender_first_name} {sender_last_name} - Founder at Ken AI
 ```
 
 The A/B here tested **which product angle leads** (daily leads first vs full campaign first) - again the offer, not adjectives.
@@ -115,7 +117,7 @@ The A/B here tested **which product angle leads** (daily leads first vs full cam
 7. **Value math makes the offer tangible.** The one long email in the sequence is a numbered value stack where every line carries a number and a worth. Prose never gets that budget; lists of real numbers do.
 8. **One flourish of personality per email, max.** The toast joke, the pinata, "You can even send pics." One human beat per email - not a comedy routine, and never a pun-filled AI attempt at "casual".
 9. **Callbacks stitch the sequence.** "Worth a toast?" in Email 2 only works because of Email 1. Write the sequence as one conversation, not three isolated emails.
-10. **Follow-ups shrink.** ~72 words, then the value stack, then ~35-45 word closes. The final email is belief ("I really believe we can help {company}... otherwise I wouldn't make such a crazy offer") or honest scarcity ("each one takes real time from our team") - never "just following up".
+10. **Follow-ups shrink.** ~72 words, then the value stack, then ~35-45 word closes (inside the 30-60 follow-up band). The final email is belief ("I really believe we can help {company}... otherwise I wouldn't make such a crazy offer") or honest scarcity ("each one takes real time from our team") - never "just following up".
 11. **Test the offer variable, not the adjective.** Every variant changes something a prospect would describe differently to a colleague (the metric, the leading angle, the guarantee). If both variants would be described the same way over coffee, the test is worthless.
 12. **Bare `{firstName},` is a valid follow-up greeting.** Email 1 opens `Hey {firstName},`; follow-ups in the same thread may open with just `{firstName},` - it reads like a real person continuing a conversation.
 
