@@ -26,7 +26,7 @@ If we do hit it, I'm sending a mini pinata and party supplies. You can even send
 Want to try it?
 
 Best,
-{sender_first_name} {sender_last_name} - Founder at [Ken AI](https://ken.so)
+{sender_first_name} {sender_last_name} - Founder at [Northwind](https://northwind.example)
 
 {{PS Line}}
 ```
@@ -49,7 +49,7 @@ That's $1,850 in value, on us. And if we don't land you at least 5 positive repl
 Worth a toast?
 
 Best,
-{sender_first_name} {sender_last_name} - Founder at [Ken AI](https://ken.so)
+{sender_first_name} {sender_last_name} - Founder at [Northwind](https://northwind.example)
 
 PS - Ryan Allis, who had a 169M SaaS exit from his email marketing company, now uses us. We helped his new company SaasRise go from 1.5M to 4.5M ARR in 12 months.
 ```
@@ -64,7 +64,7 @@ I really believe we can help {company} get in front of the right people. Otherwi
 If this isn't relevant, just reply and I'll stop emailing.
 
 Best,
-{sender_first_name} {sender_last_name} - Founder at [Ken AI](https://ken.so)
+{sender_first_name} {sender_last_name} - Founder at [Northwind](https://northwind.example)
 
 {{Final PS Line}}
 ```
@@ -79,7 +79,7 @@ We only run a few free trials each month since each one takes real time from our
 If you want one of the spots, just reply.
 
 Best,
-{sender_first_name} {sender_last_name} - Founder at [Ken AI](https://ken.so)
+{sender_first_name} {sender_last_name} - Founder at [Northwind](https://northwind.example)
 
 {{Final PS Line}}
 ```
@@ -101,7 +101,7 @@ You don't need to pay anything, just sign up if you want it:
 [Sign up here](https://ken.so/daily)
 
 Best,
-{sender_first_name} {sender_last_name} - Founder at Ken AI
+{sender_first_name} {sender_last_name} - Founder at Northwind
 ```
 
 The A/B here tested **which product angle leads** (daily leads first vs full campaign first) - again the offer, not adjectives.

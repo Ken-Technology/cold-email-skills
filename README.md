@@ -12,7 +12,7 @@ Works with Claude Code, Codex, Cursor, and any other agent that supports [Agent 
 
 ## Where this comes from
 
-[Ken](https://ken.so/?utm_source=github&utm_medium=skills-repo) started as a done-for-you cold email agency. These are not prompts written for a repo - they are the production skills our team runs for clients, ported to work anywhere. Across all client campaigns, this playbook averages a **3% reply rate** against a 0.8% industry average and **7 meetings per 10k emails** against the industry's 1, with copy frameworks tested across 500k+ sent emails.
+[Kenso](https://ken.so/?utm_source=github&utm_medium=skills-repo) started as a done-for-you cold email agency. These are not prompts written for a repo - they are the production skills our team runs for clients, ported to work anywhere. Across all client campaigns, this playbook averages a **3% reply rate** against a 0.8% industry average and **7 meetings per 10k emails** against the industry's 1, with copy frameworks tested across 500k+ sent emails.
 
 We open-sourced the strategy layer because the playbook was never the moat. Execution is.
 
@@ -68,7 +68,7 @@ Each skill is a plain markdown file. Worst case, open the `SKILL.md` and paste i
 | Skill | What you get |
 | --- | --- |
 | [cold-email-campaign](cold-email-campaign/SKILL.md) | The orchestrator. Runs the whole playbook end to end and stops at ready-to-send files. |
-| [create-campaign](create-campaign/SKILL.md) | The same orchestrator under the name Ken uses for it. Install either one. |
+| [create-campaign](create-campaign/SKILL.md) | The same orchestrator under the name Kenso uses for it. Install either one. |
 | [knowledge-setup](knowledge-setup/SKILL.md) | A company knowledge folder: overview, ideal customer, pricing, proof, competitors and voice, each fact with its source. |
 | [client-research](client-research/SKILL.md) | A research doc synthesized from your notes, meeting transcripts, and website. |
 | [search-strategy](search-strategy/SKILL.md) | Your ICP turned into portable search filters for Apollo, Sales Nav, Clay, or any list tool. |
@@ -82,7 +82,7 @@ Each skill is a plain markdown file. Worst case, open the `SKILL.md` and paste i
 
 Run the orchestrator for the full pipeline, or any skill on its own - they all read and write plain files.
 
-These are the same skills Ken's own agents run, generated from the source Ken ships in its product with the platform steps left out, so the free text improves whenever ours does.
+These are the same skills Kenso's own agents run, generated from the source Kenso ships in its product with the platform steps left out, so the free text improves whenever ours does.
 
 ## What these skills do not do
 
@@ -92,17 +92,17 @@ That is a feature: no account, no API keys, and nothing leaves your machine.
 
 ## When you outgrow the files
 
-The skills stop where infrastructure starts. Ken is the same playbook running with the machinery attached:
+The skills stop where infrastructure starts. Kenso is the same playbook running with the machinery attached:
 
-| The skills give you | Ken adds |
+| The skills give you | Kenso adds |
 | --- | --- |
 | Portable search filters | A 280M+ contact database that runs them, with verified emails and phones |
 | Qualification and segmentation prompts | The same prompts executed across your whole list automatically |
 | Personalization prompts to run by hand | Live AI personalization on every outgoing email |
 | Ready-to-send copy | Sending infrastructure, deliverability, and reply tracking |
 
-- **[Try Ken AI](https://ken.so/?utm_source=github&utm_medium=skills-repo)** - bring the campaign folder these skills produced; it maps 1:1.
-- **[Ken Daily](https://ken.so/daily?utm_source=github&utm_medium=skills-repo)** - not ready to send at scale? Get 10 verified leads in your inbox every morning. Free forever, no card.
+- **[Try Kenso](https://ken.so/?utm_source=github&utm_medium=skills-repo)** - bring the campaign folder these skills produced; it maps 1:1.
+- **[Kenso Daily](https://ken.so/daily?utm_source=github&utm_medium=skills-repo)** - not ready to send at scale? Get 10 verified leads in your inbox every morning. Free forever, no card.
 
 ## FAQ
 
@@ -120,9 +120,9 @@ Fork it. The copy rules in `email-review`, the sequence blueprints in `campaign-
 
 ## Contributing
 
-Issues and PRs welcome. The skill files are generated from Ken's source, so a PR here is carried into that source and comes back with the next sync rather than merged as is. If a skill produced weak output, open an issue with the prompt you used and the artifact it wrote - that is the most useful bug report for a skills repo.
+Issues and PRs welcome. The skill files are generated from Kenso's source, so a PR here is carried into that source and comes back with the next sync rather than merged as is. If a skill produced weak output, open an issue with the prompt you used and the artifact it wrote - that is the most useful bug report for a skills repo.
 
-Maintainers: nothing syncs this repo automatically. Every skill folder, this README and LICENSE are regenerated from `mcp/src/ken_mcp/skills` in Ken's ken-backend repo. From ken-backend, run `cd mcp && uv run python scripts/build_skill_packages.py write --files-out <new empty dir>`, replace this repo's skill folders, README and LICENSE with that directory's contents, and open a PR. Do not edit the skill files here by hand.
+Maintainers: nothing syncs this repo automatically. Every skill folder, this README and LICENSE are regenerated from `mcp/src/ken_mcp/skills` in Kenso's ken-backend repo. From ken-backend, run `cd mcp && uv run python scripts/build_skill_packages.py write --files-out <new empty dir>`, replace this repo's skill folders, README and LICENSE with that directory's contents, and open a PR. Do not edit the skill files here by hand.
 
 ## License
 
