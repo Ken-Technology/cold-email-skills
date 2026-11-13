@@ -24,7 +24,7 @@ _How to write email copy_
 
 ### Formatting
 #### Basic Rules
-*   **Plain text only** - No markdown formatting in emails
+*   **No markdown formatting** in emails; Email 1 to Google recipients follows the first-email rules in `email-copywriting`
 *   No headings, no bulleted lists, no numbered lists
 *   For bullets, use simple dashes (the minus sign on keyboard)
 *   For numbered items, write manually as 1, 2, 3, 4 (no auto-formatting)

@@ -54,7 +54,7 @@ Notes:
 - `$`, `%`, numbers, or emoji in subject lines (one emoji in body max, only on a warmed domain)
 - More than 1 link in a first touch (2 absolute max in any email); anchor text must say where the link goes; never URL shorteners (bit.ly etc. carry shared blocklist reputation)
 - Image-heavy HTML, attachments on first touch, hidden text (explicit Google flag)
-- Designed-looking emails: plain text structure always - heavy HTML bounces ~6.5x more (a 2.2M-email study)
+- Designed-looking emails. Google recipients (Google Workspace or gmail.com) should get plain text, with no bold, HTML signature, logo or image in the first email; Microsoft recipients (Microsoft 365 or outlook.com) can get the email as written.
 - Formal unsubscribe LINKS in cold email add newsletter-classification signals - use the plain-text opt-out line instead ("If this isn't relevant, just reply and I'll stop emailing")
 
 ## Safe alternatives (the reach-for list)
