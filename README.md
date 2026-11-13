@@ -122,7 +122,7 @@ Fork it. The copy rules in `email-review`, the sequence blueprints in `campaign-
 
 Issues and PRs welcome. The skill files are generated from Kenso's source, so a PR here is carried into that source and comes back with the next sync rather than merged as is. If a skill produced weak output, open an issue with the prompt you used and the artifact it wrote - that is the most useful bug report for a skills repo.
 
-Maintainers: nothing syncs this repo automatically. Every skill folder, this README and LICENSE are regenerated from `mcp/src/ken_mcp/skills` in Kenso's ken-backend repo. From ken-backend, run `cd mcp && uv run python scripts/build_skill_packages.py write --files-out <new empty dir>`, replace this repo's skill folders, README and LICENSE with that directory's contents, and open a PR. Do not edit the skill files here by hand.
+Maintainers: Kenso's ken-backend repo publishes this one. Every skill folder, this README and LICENSE are generated from `mcp/src/ken_mcp/skills` there, and its `cold-email-skills-sync.yml` workflow opens and merges a sync PR here whenever they change on its `main`. Run it by hand with `gh workflow run cold-email-skills-sync.yml -R Ken-Technology/ken-backend --ref main`. To publish without it, run `cd mcp && uv run python scripts/build_skill_packages.py write --files-out <a checkout of this repo>` in ken-backend and open a PR with the change. Do not edit the skill files here by hand.
 
 ## License
 
