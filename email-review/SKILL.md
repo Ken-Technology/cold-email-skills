@@ -104,7 +104,8 @@ A static opener that fails (a)-(d) is a REJECT. A failing sample is fixed in its
 - [ ] A PS variable sits on its own line after the signature.
 
 #### Formatting
-- [ ] Paragraphs of 1-3 sentences with spacing; no ALL CAPS; plain text; no calendar link in Email 1.
+- [ ] Paragraphs of 1-3 sentences with spacing; no ALL CAPS; no bold or other styling; no calendar link in Email 1.
+- [ ] **Email 1 to Google recipients:** the one link alone on its own line, short, on the sender's own domain; the proof in the text, not only behind the link; no bold, HTML signature, logo, image, video, handwritten letter or designed email. FLAG each miss, unless the user said every lead is on Microsoft.
 
 #### Brevity and punch (HARD - the #1 operator complaint)
 - [ ] **Count the static body words** of every email (prose + CTA; not the greeting, AI-variable lines, or signature; a static PS is excluded but capped at ~35 words in at most 1-2 emails). Bands: **Email 1 50-80 words, follow-ups 30-60.** REJECT an Email 1 over 80 or a follow-up over 60, except one value-stack email per sequence (~100 words, numbered lines with real numbers). FLAG an email under its band. The lint's 40-word floor on the whole body still applies. Report each count.

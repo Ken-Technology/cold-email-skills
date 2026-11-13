@@ -129,6 +129,7 @@ Done when each variable's samples read well to the user.
 
 ## Picking up a campaign
 
+
 | What you find in `./cold-email/{slug}/` | Start at |
 |---|---|
 | No `research.md`, and no notes from the user | Research, before stage 1 |

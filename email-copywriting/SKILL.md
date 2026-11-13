@@ -194,12 +194,21 @@ Default to 3 emails. Go beyond 3 only when each extra email carries a distinct, 
 - **Final-email endings (HARD):** the last email never announces itself. Banned: "Last note from me", "Last email", "Just following up", "Following up", "Circling back", "Checking in", "Wanted to follow up", "Bumping this", "One last try". It earns its open with a real idea and closes on the offer CTA.
 
 ### Formatting
-- Plain text; short paragraphs (1-3 sentences) with spacing; never ALL CAPS.
+- Plain prose: short paragraphs (1-3 sentences) with spacing; no bold or other styling; never ALL CAPS.
 - Bullets as simple dashes, numbered items typed as 1, 2, 3. No markdown except links.
 - No calendar link in Email 1.
 
 ### First email
 - Mention the solution, not just the problem; state the problem and offer the solution together. State the UVP clearly. Don't ask if they have the problem.
+
+### First email to Google recipients (HARD)
+A recipient on Google (Google Workspace or gmail.com) should get Email 1 as plain text, so write it to read right without HTML:
+- The one link sits alone on its own line, so a plain-text send shows its URL.
+- One link only, short, on the sender's own domain.
+- The proof is in the text: one or two specific findings before the link, not only behind it.
+- No bold, HTML signature, logo, image, video, handwritten letter or designed email in Email 1: each turns it into HTML.
+
+A recipient on Microsoft (Microsoft 365 or outlook.com) can get the email as written.
 
 ### Pain point testing
 - The first pain you reach for is rarely the winner. Propose several candidates and test them as Email 1 variants; note which pain each variant leads with.
