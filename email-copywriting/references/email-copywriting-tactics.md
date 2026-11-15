@@ -29,7 +29,7 @@ _How to write email copy_
 *   For bullets, use simple dashes (the minus sign on keyboard)
 *   For numbered items, write manually as 1, 2, 3, 4 (no auto-formatting)
 *   No bold, italic, or other text styles
-*   **One link maximum per email, signature company link included** - a markdown link on a few plain words, `https` only. Never a bare URL and never link text that reads like a web address (`acme.com`): click tracking routes the link through a tracking domain, and a visible host that does not match reads as phishing
+*   **One link maximum per email, signature company link included** - in an email sent as plain text, the address typed as text without `https://` (`acme.com/report`), alone on its line: a plain text email never carries a click-tracking link. In an email sent as HTML, a markdown link on a few plain words, `https` only. Never a bare URL and never link text that reads like a web address (`acme.com`): click tracking routes the link through a tracking domain, and a visible host that does not match reads as phishing
 *   Don't use special dash characters (no em or en dashes); use only the simple dash from keyboard
 *   Numbers as digits: "40-50%", "3,000 emails", never "forty to fifty percent"
 

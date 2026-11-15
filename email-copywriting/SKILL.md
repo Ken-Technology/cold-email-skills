@@ -56,7 +56,7 @@ Check every email against this list before you write the file; fix a failing ema
 3. **No em-dashes** (and no en-dashes) anywhere in subject or body. Use the simple keyboard dash `-`.
 4. **Subject is 1-60 characters** on every step, follow-ups included.
 5. **Body is 40-180 words**, counted on the whole body (greeting through signature and PS). The editorial bands below (Email 1 50-80 static words, follow-ups 30-60) are stricter at the top; at the bottom, count the whole body: the greeting and a `{sender_signature}` line add only about 3 words, so a close under about 37 static words with no PS fails.
-6. **At most 1 link per email**, counting raw URLs, markdown links and a linked company name in the signature.
+6. **At most 1 link per email**, counting raw URLs, markdown links, an address typed as text and a linked company name in the signature.
 7. **No unresolved placeholders:** no square-bracket stand-ins (`[Company]`, `[Name]`, `[First Line]`), no `TODO` / `TBD`, and no double-brace token other than a declared `{{Title Case}}` AI variable. Never write a tracking token: put the real URL in a markdown link, and the sending tool adds click tracking.
 
 ## Variables
@@ -67,10 +67,11 @@ Check every email against this list before you write the file; fix a failing ema
 | AI variable | `{{Title Case}}` double braces | `{{Subject Line}}`, `{{First Line}}`, `{{PS Line}}`, `{{Final PS Line}}` |
 | Signature | `{sender_signature}` on its own line | every email, after the CTA |
 | Sender | `{sender_first_name}` / `{sender_last_name}` | only in the two-line signature alternative |
-| Link | markdown link on plain words, `https` only | the sending tool may wrap it for click tracking |
+| Link | markdown link on plain words, `https` only; in an email sent as plain text, the address typed as text (`www.acme.com/pilot`) | the sending tool may wrap a markdown link for click tracking |
 
 - **AI variables** use Title Case names (max 30 characters), uppercase-first, exactly as declared. No square brackets, no lowercase or snake_case spellings, no alternate spellings (`{{Subject line}}`). This is the form personalization tools and LLMs resolve.
-- **Links** are markdown links on a few plain words (`[Acme](https://acme.com)`, `[grab a spot](https://acme.com/pilot)`), never a bare URL and never link text that reads like a web address: click tracking sends every link through a tracking domain, and a visible host that does not match it reads as phishing.
+- **Links** depend on how the email is sent. A plain text email never carries a click-tracking link. In an email sent as plain text, type each address as text, without `https://`, starting at the host as written (`www.linkedin.com/in/jane-doe/`, `acme.com/pilot`): the real destination, alone on its own line, one only, short.
+- In an email sent as HTML, links are markdown links on a few plain words (`[Acme](https://acme.com)`, `[grab a spot](https://acme.com/pilot)`), never a bare URL and never link text that reads like a web address: click tracking sends every link through a tracking domain, and a visible host that does not match it reads as phishing.
 - **One AI variable = one value per LEAD, not per email.** Personalization runs one prompt per lead and fills one value; the same token in Emails 1-3 sends the identical sentence three times. An email that needs its own opener gets its own name (`{{First Line}}`, `{{Bump First Line}}`, `{{Nudge First Line}}`). Reuse is intentional only for `{{Subject Line}}` on every step.
 - **Default AI-variable layout:** Email 1 carries `{{First Line}}` and `{{PS Line}}`; the last email may carry `{{Final PS Line}}`; middle emails carry no AI-variable lines unless the strategy asks. Never an opener and a PS on every email - over-personalization is the top operator complaint.
 - **Every AI variable in the copy needs a matching prompt**: a `###` heading of the same name in the segment's `prompts.md` (**prompt-writer** writes them, one per variable). `{{Subject Line}}` needs one too.
@@ -203,7 +204,7 @@ Default to 3 emails. Go beyond 3 only when each extra email carries a distinct, 
 
 ### First email to Google recipients (HARD)
 A recipient on Google (Google Workspace or gmail.com) should get Email 1 as plain text, so write it to read right without HTML:
-- The one link sits alone on its own line, so a plain-text send shows its URL.
+- The one link is its address typed as text, alone on its own line, without `https://`: `acme.com/report`. A plain text email never carries a click-tracking link, so the reader sees the real destination.
 - One link only, short, on the sender's own domain.
 - The proof is in the text: one or two specific findings before the link, not only behind it.
 - No bold, HTML signature, logo, image, video, handwritten letter or designed email in Email 1: each turns it into HTML.
@@ -218,7 +219,7 @@ A recipient on Microsoft (Microsoft 365 or outlook.com) can get the email as wri
 - **Diagnostic questions are not CTAs:** "Do you have a system for X?", "Where do your clients come from?", "Is it worth a look?", "a quick look", "Curious if...?", "Worth exploring...?".
 - Direct and specific: "Want me to walk you through how it works?", "Open to a quick walkthrough?". For SaaS calls, a "strategy call".
 - Yes/no or either/or only. No time commitments ("15 min") in the CTA line; when the length matters, say it in the body before the CTA. Never "Should I close the loop?"; use "Reply if you'd like me to stop emailing".
-- Preferred pattern: a short question with the link on its own line, on a short phrase ("Do you want to apply?" then `[Apply here](https://...)`). That link is the email's one link.
+- Preferred pattern: a short question with the link on its own line, on a short phrase ("Do you want to apply?" then `[Apply here](https://...)`). That link is the email's one link. In an email sent as plain text, the line under the question is the address typed as text (`acme.com/apply`).
 
 ### Rhetorical questions
 Answer a rhetorical question in the very next sentence. Never leave the prospect hanging.
