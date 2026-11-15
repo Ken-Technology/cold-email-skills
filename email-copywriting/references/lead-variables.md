@@ -13,7 +13,7 @@ This file says what each one is and which ones are safe to use.
 | Lead variable | `{variableName}` (single braces, camelCase), optional fallback after a bar (Fallbacks below) | `{firstName}`, `{company}` | Contact data |
 | Sender variable | `{sender_snake_case}` (single braces) | `{sender_signature}`, `{sender_first_name}` | Sending inbox |
 | AI variable | `{{Variable Name}}` (double braces, Title Case, max 30 characters) | `{{First Line}}`, `{{PS Line}}` | AI personalization prompts |
-| Tracking link | never written in copy; the sending tool adds click tracking to real URLs | - | Sending tool |
+| Tracking link | never written in copy; the sending tool may add click tracking to real URLs in an email sent as HTML, and a plain text email carries none | - | Sending tool |
 
 ## Safe to use in copy
 
@@ -129,7 +129,7 @@ Best,
 | `{industry}` in a sentence | an AI variable, or leave it out | Often empty: "In the  space" reads broken |
 | Lead variable in double braces | `{firstName}` | Lead variables use single braces; double braces are only for AI variables |
 | `[Company]`, `[First Name]` | `{company}`, `{firstName}` | Square-bracket stand-ins fail the lint as unresolved placeholders |
-| `{{tracking_link:ID}}` or any tracking token | a markdown link on plain words | The sending tool adds click tracking; write the real URL in the link |
+| `{{tracking_link:ID}}` or any tracking token | a markdown link on plain words; in an email sent as plain text, the address typed as text (`acme.com/report`) | Write the real URL; a plain text email never carries a click-tracking link |
 
 ## Compatibility Notes
 
