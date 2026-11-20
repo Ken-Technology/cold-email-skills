@@ -51,7 +51,7 @@ Notes:
 ## Structural triggers (often stronger than any word)
 
 - ALL CAPS words anywhere · more than one `!` per email · `!!!` / `???`
-- `$`, `%`, numbers, or emoji in subject lines (one emoji in body max, only on a warmed domain)
+- `$`, `%`, numbers, or emoji in subject lines (one emoji in body max, only on an established sending domain)
 - More than 1 link in a first touch (2 absolute max in any email); anchor text must say where the link goes; never URL shorteners (bit.ly etc. carry shared blocklist reputation)
 - Image-heavy HTML, attachments on first touch, hidden text (explicit Google flag)
 - Designed-looking emails. Google recipients (Google Workspace or gmail.com) should get plain text, with no bold, HTML signature, logo or image in the first email; Microsoft recipients (Microsoft 365 or outlook.com) can get the email as written.
@@ -83,5 +83,5 @@ Notes:
 
 - "book a call" / "quick call" / "demo" / "meeting" - on no evidence-based risk list; a reply-rate consideration, not deliverability.
 - Single everyday-B2B words in natural context (problem, here, never, stop, sample, avoid...) - the long 400-word lists are legacy noise; only the tiers above are enforced.
-- One specific dollar figure in the body of a warmed domain's email.
+- One specific dollar figure in the body of an established sending domain's email.
 - A plain-text opt-out sentence - recommended, not penalized.
